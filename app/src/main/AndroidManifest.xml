@@ -29,7 +29,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".outdoorActivity"
+            android:name=".mainActivity"
             android:label="@string/title_activity_outdoor">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
