@@ -88,10 +88,16 @@ public class outdoorActivity extends FragmentActivity implements OnMapReadyCallb
             newZoom=17;
         }
         if(position.target.longitude<-4.250000){
-            newLatLng=new LatLng(position.target.latitude,-4.250000);
+            newLatLng=new LatLng(newLatLng.latitude,-4.250000);
         }
         if(position.target.longitude>-4.235812){
-            newLatLng=new LatLng(position.target.latitude,-4.235812);
+            newLatLng=new LatLng(newLatLng.latitude,-4.235812);
+        }
+        if(position.target.latitude<55.859147){
+            newLatLng=new LatLng(55.859147,newLatLng.longitude);
+        }
+        if(position.target.latitude>55.864932){
+            newLatLng=new LatLng(55.864932,newLatLng.longitude);
         }
         newPosition = new CameraPosition(newLatLng,newZoom,position.tilt,position.bearing);
         if(!newPosition.equals(position)) {
