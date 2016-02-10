@@ -7,7 +7,7 @@ import com.google.android.gms.maps.model.LatLng;
 /**
  * Created by kbb12155 on 10/02/16.
  */
-public class Controller implements GoogleMap.OnCameraChangeListener {
+public class Controller implements IController {
 
     IModel model;
 
@@ -22,10 +22,8 @@ public class Controller implements GoogleMap.OnCameraChangeListener {
         CameraPosition newPosition;
         LatLng newLatLng =position.target;
         float newZoom=position.zoom;
-        if(position.zoom<16) {
-            newZoom=16;
-        }else if(position.zoom>17){
-            newZoom=17;
+        if(position.zoom<14) {
+            newZoom=14;
         }
         if(position.target.longitude<-4.250000){
             newLatLng=new LatLng(newLatLng.latitude,-4.250000);

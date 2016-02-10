@@ -10,11 +10,11 @@ import com.google.android.gms.maps.model.CameraPosition;
  */
 public class View implements OnMapReadyCallback,RoutePlannerListener {
 
-    Controller controller;
+    IController controller;
     GoogleMap gMap;
     RoutePlannerState prevState;
 
-    public View(Controller controller){
+    public View(IController controller){
         this.controller=controller;
         prevState=null;
     }
