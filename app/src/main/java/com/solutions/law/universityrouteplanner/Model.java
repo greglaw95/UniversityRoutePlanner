@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by kbb12155 on 10/02/16.
  */
-public class Model {
+public class Model implements IModel{
 
     CameraPosition position;
 

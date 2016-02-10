@@ -9,9 +9,9 @@ import com.google.android.gms.maps.model.LatLng;
  */
 public class Controller implements GoogleMap.OnCameraChangeListener {
 
-    Model model;
+    IModel model;
 
-    public Controller(Model model){
+    public Controller(IModel model){
         this.model=model;
     }
 
