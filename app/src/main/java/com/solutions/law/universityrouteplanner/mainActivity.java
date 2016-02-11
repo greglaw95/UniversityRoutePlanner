@@ -20,16 +20,17 @@ import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 
 
-public class mainActivity extends FragmentActivity{
+public class MainActivity extends FragmentActivity{
 
     private GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FileReader read = new FileReader(this);
         Model model = new Model();
         Controller controller = new Controller(model);
-        View view = new View(controller);
+        View view = new View(controller,read.getElements());
         setContentView(R.layout.activity_outdoor);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
