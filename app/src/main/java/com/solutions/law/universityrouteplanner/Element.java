@@ -1,6 +1,7 @@
 package com.solutions.law.universityrouteplanner;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polygon;
 
 import java.util.List;
 
@@ -22,5 +23,14 @@ public class Element {
 
     public List<LatLng> getCoOrds(){
         return coOrds;
+    }
+
+    public boolean sameShape(Polygon p){
+        for(LatLng latLng:coOrds){
+            if(!p.getPoints().contains(latLng)){
+                return false;
+            }
+        }
+        return true;
     }
 }

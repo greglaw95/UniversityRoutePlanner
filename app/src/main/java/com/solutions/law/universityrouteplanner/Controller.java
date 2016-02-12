@@ -3,6 +3,9 @@ package com.solutions.law.universityrouteplanner;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polygon;
+
+import java.util.List;
 
 /**
  * Created by kbb12155 on 10/02/16.
@@ -10,9 +13,11 @@ import com.google.android.gms.maps.model.LatLng;
 public class Controller implements IController {
 
     IModel model;
+    List<Element> elements;
 
-    public Controller(IModel model){
+    public Controller(IModel model,List<Element> elements){
         this.model=model;
+        this.elements=elements;
     }
 
     @Override
@@ -40,4 +45,14 @@ public class Controller implements IController {
         newPosition = new CameraPosition(newLatLng,newZoom,position.tilt,position.bearing);
         model.moveTo(newPosition);
     }
+
+    public void onPolygonClick(Polygon clicked){
+        for(Element element:elements){
+            if(element.sameShape(clicked)){
+                model.userSelectItem(element.getName());
+                return;
+            }
+        }
+    }
+
 }

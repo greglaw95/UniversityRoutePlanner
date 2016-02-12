@@ -29,7 +29,7 @@ public class MainActivity extends FragmentActivity{
         super.onCreate(savedInstanceState);
         FileReader read = new FileReader(this);
         Model model = new Model();
-        Controller controller = new Controller(model);
+        Controller controller = new Controller(model,read.getElements());
         View view = new View(controller,read.getElements());
         setContentView(R.layout.activity_outdoor);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
