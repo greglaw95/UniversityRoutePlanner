@@ -10,17 +10,24 @@ import java.util.List;
 public class ModelState implements RoutePlannerState {
     CameraPosition position;
     List<String> userSelected;
+    String startLoc;
+    String endLoc;
 
-    public ModelState(CameraPosition position,List<String> userSelected){
+    public ModelState(CameraPosition position,String startLoc,String endLoc){
         this.position=position;
-        this.userSelected=userSelected;
+        this.startLoc=startLoc;
+        this.endLoc=endLoc;
     }
 
     public CameraPosition getLocation(){
         return position;
     }
 
-    public List<String> getUserSelected(){
-        return userSelected;
+    public String getStartLoc(){
+        return startLoc;
+    }
+
+    public String getEndLoc(){
+        return endLoc;
     }
 }

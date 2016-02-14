@@ -15,12 +15,14 @@ public class Model implements IModel{
     CameraPosition position;
 
     private List<RoutePlannerListener> listeners;
-    private List<String> userSelected;
+    private String startLoc;
+    private String endLoc;
 
     public Model(){
         position=null;
         listeners=new ArrayList<RoutePlannerListener>();
-        userSelected=new ArrayList<String>();
+        startLoc=null;
+        endLoc=null;
     }
 
     public void addListener(RoutePlannerListener newListener){
@@ -34,12 +36,13 @@ public class Model implements IModel{
         }
     }
 
-    public void userSelectItem(String item) {
-        if (userSelected.contains(item)) {
-            userSelected.remove(item);
-        }else{
-            userSelected.add(item);
-        }
+    public void startLoc(String start){
+        this.startLoc=start;
+        alertAll();
+    }
+
+    public void endLoc(String end){
+        this.endLoc=end;
         alertAll();
     }
 
@@ -52,7 +55,7 @@ public class Model implements IModel{
 
     private void alertAll(){
         for(RoutePlannerListener listener:listeners){
-            listener.update(new ModelState(position,userSelected));
+            listener.update(new ModelState(position,startLoc,endLoc));
         }
     }
 }

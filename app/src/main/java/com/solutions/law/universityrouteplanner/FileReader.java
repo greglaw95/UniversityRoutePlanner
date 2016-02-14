@@ -43,6 +43,9 @@ public class FileReader {
                 linePieces= Arrays.asList(line.split(" ")).iterator();
                 limit=Integer.parseInt(linePieces.next());
                 for(int i=0;i<limit;i++){
+                    if(i!=0){
+                        name.append(" ");
+                    }
                     name.append(linePieces.next());
                 }
                 limit=Integer.parseInt(linePieces.next());

@@ -7,5 +7,6 @@ import com.google.android.gms.maps.model.CameraPosition;
  */
 public interface IModel {
     public void moveTo(CameraPosition position);
-    public void userSelectItem(String item);
+    public void startLoc(String item);
+    public void endLoc(String item);
 }

@@ -1,23 +1,12 @@
 package com.solutions.law.universityrouteplanner;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.graphics.Color;
+import android.view.WindowManager;
+import android.widget.EditText;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polygon;
-import com.google.android.gms.maps.model.PolygonOptions;
 
 
 public class MainActivity extends FragmentActivity{
@@ -27,11 +16,14 @@ public class MainActivity extends FragmentActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         FileReader read = new FileReader(this);
         Model model = new Model();
         Controller controller = new Controller(model,read.getElements());
-        View view = new View(controller,read.getElements());
         setContentView(R.layout.activity_outdoor);
+        EditText textOne =(EditText) findViewById(R.id.locationOne);
+        EditText textTwo =(EditText) findViewById(R.id.locationTwo);
+        View view = new View(controller,read.getElements(),textOne,textTwo);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);

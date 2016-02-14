@@ -9,5 +9,6 @@ import java.util.List;
  */
 public interface RoutePlannerState {
     public CameraPosition getLocation();
-    public List<String> getUserSelected();
+    public String getStartLoc();
+    public String getEndLoc();
 }

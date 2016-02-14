@@ -17,6 +17,18 @@ public class Element {
         this.coOrds=coOrds;
     }
 
+    @Override
+    public boolean equals(Object other){
+        if(!(other instanceof Element)){
+            return false;
+        }
+        Element otherElement = (Element) other;
+        //The name of each element should be unique this
+        //is a precondition on which the system is built
+        //so it can be assumed to be true.
+        return this.name.equals(otherElement.getName());
+    }
+
     public String getName(){
         return name;
     }
