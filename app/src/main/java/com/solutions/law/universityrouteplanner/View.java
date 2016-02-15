@@ -2,6 +2,7 @@ package com.solutions.law.universityrouteplanner;
 
 import android.graphics.Color;
 import android.view.MotionEvent;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -24,14 +25,16 @@ public class View implements OnMapReadyCallback,RoutePlannerListener {
     GoogleMap gMap;
     EditText startPoint;
     EditText endPoint;
+    Button directionsButton;
     RoutePlannerState prevState;
     Polygon p;
 
-    public View(IController control,List<Element> elements,EditText startPoint,EditText endPoint){
+    public View(IController control,List<Element> elements,EditText startPoint,EditText endPoint,Button directionsButton){
         this.elements=elements;
         this.controller=control;
         this.startPoint=startPoint;
         this.endPoint=endPoint;
+        this.directionsButton=directionsButton;
         this.startPoint.setOnTouchListener(new android.view.View.OnTouchListener() {
             @Override
             public boolean onTouch(android.view.View v, MotionEvent event) {
@@ -43,6 +46,13 @@ public class View implements OnMapReadyCallback,RoutePlannerListener {
             @Override
             public boolean onTouch(android.view.View v, MotionEvent event) {
                 controller.focusOn(IController.Location.END);
+                return false;
+            }
+        });
+        this.directionsButton.setOnTouchListener(new android.view.View.OnTouchListener() {
+            @Override
+            public boolean onTouch(android.view.View v, MotionEvent event) {
+                controller.route();
                 return false;
             }
         });

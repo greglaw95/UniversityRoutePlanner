@@ -12,4 +12,6 @@ public interface IController extends GoogleMap.OnCameraChangeListener,GoogleMap.
     }
 
     public void focusOn(Location location);
+
+    public void route();
 }

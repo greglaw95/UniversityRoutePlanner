@@ -2,7 +2,9 @@ package com.solutions.law.universityrouteplanner;
 
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -23,7 +25,8 @@ public class MainActivity extends FragmentActivity{
         setContentView(R.layout.activity_outdoor);
         EditText textOne =(EditText) findViewById(R.id.locationOne);
         EditText textTwo =(EditText) findViewById(R.id.locationTwo);
-        View view = new View(controller,read.getElements(),textOne,textTwo);
+        Button directionsButton = (Button) findViewById(R.id.directionsButton);
+        View view = new View(controller,read.getElements(),textOne,textTwo,directionsButton);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);

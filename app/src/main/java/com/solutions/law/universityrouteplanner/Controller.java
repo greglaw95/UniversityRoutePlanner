@@ -30,6 +30,14 @@ public class Controller implements IController {
     }
 
     @Override
+    public void route(){
+        int i=5;
+        int j=6;
+        i=i+j;
+        j=j+i;
+    }
+
+    @Override
     public void onCameraChange(CameraPosition position){
         //Instead of animating each time build new cameraPosition then animate to there
         //this will stop you missing it if they zoom and move out of bounds.
