@@ -8,8 +8,6 @@ import android.widget.EditText;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 
@@ -21,7 +19,8 @@ import java.util.List;
 public class View implements OnMapReadyCallback,RoutePlannerListener {
 
     final IController controller;
-    List<Element> elements;
+    List<EndPoint> endPoints;
+    List<SteppingStone> steppingStones;
     GoogleMap gMap;
     EditText startPoint;
     EditText endPoint;
@@ -29,8 +28,9 @@ public class View implements OnMapReadyCallback,RoutePlannerListener {
     RoutePlannerState prevState;
     Polygon p;
 
-    public View(IController control,List<Element> elements,EditText startPoint,EditText endPoint,Button directionsButton){
-        this.elements=elements;
+    public View(IController control,List<EndPoint> endPoints,List<SteppingStone> steppingStones,EditText startPoint,EditText endPoint,Button directionsButton){
+        this.endPoints = endPoints;
+        this.steppingStones=steppingStones;
         this.controller=control;
         this.startPoint=startPoint;
         this.endPoint=endPoint;
@@ -64,7 +64,7 @@ public class View implements OnMapReadyCallback,RoutePlannerListener {
         gMap = googleMap;
         gMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         gMap.setOnCameraChangeListener(controller);
-        for(Element current:elements){
+        for(EndPoint current: endPoints){
             gMap.addPolygon(new PolygonOptions().addAll(current.getCoOrds()).strokeColor(Color.BLUE).fillColor(Color.CYAN).geodesic(true).clickable(true));
         }
         gMap.setBuildingsEnabled(false);
@@ -80,7 +80,7 @@ public class View implements OnMapReadyCallback,RoutePlannerListener {
                 gMap.clear();
                 gMap.setBuildingsEnabled(false);
                 gMap.animateCamera(CameraUpdateFactory.newCameraPosition(state.getLocation()));
-                for(Element current:elements){
+                for(EndPoint current: endPoints){
                     if(current.getName().equals(state.getEndLoc())||current.getName().equals(state.getStartLoc())){
                         gMap.addPolygon(new PolygonOptions().addAll(current.getCoOrds()).strokeColor(Color.RED).fillColor(Color.MAGENTA).geodesic(true).clickable(true));
                     }else {

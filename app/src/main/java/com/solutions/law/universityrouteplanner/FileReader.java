@@ -8,10 +8,8 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,18 +21,22 @@ import java.util.List;
  */
 public class FileReader {
 
-    List<Element> elements;
+    List<EndPoint> endPoints;
+    List<SteppingStone> steppingStones;
+    List<Link> links;
 
     public FileReader(Context context){
         Iterator<String> linePieces;
         StringBuilder name;
         List<LatLng> coOrds;
         int limit;
-        elements = new ArrayList<Element>();
+        endPoints = new ArrayList<EndPoint>();
+        steppingStones=new ArrayList<>();
+        links = new ArrayList<>();
         try {
             Resources res = context.getResources();
             AssetManager assetManager = res.getAssets();
-            InputStreamReader inputStreamReader = new InputStreamReader(assetManager.open("Elements.txt"));
+            InputStreamReader inputStreamReader = new InputStreamReader(assetManager.open("EndPoints.txt"));
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             String line=bufferedReader.readLine();
             while(line!=null){
@@ -53,8 +55,24 @@ public class FileReader {
                     coOrds.add(new LatLng(Double.parseDouble(linePieces.next()),Double.parseDouble(linePieces.next())));
                 }
 
-                elements.add(new Element(name.toString(),coOrds));
+                endPoints.add(new EndPoint(name.toString(),coOrds));
                 line=bufferedReader.readLine();
+            }
+            inputStreamReader = new InputStreamReader(assetManager.open("SteppingStones.txt"));
+            bufferedReader = new BufferedReader(inputStreamReader);
+            line=bufferedReader.readLine();
+            while(line!=null) {
+                linePieces = Arrays.asList(line.split(" ")).iterator();
+                steppingStones.add(new SteppingStone(linePieces.next(), new LatLng(Double.parseDouble(linePieces.next()), Double.parseDouble(linePieces.next()))));
+                line = bufferedReader.readLine();
+            }
+            inputStreamReader = new InputStreamReader(assetManager.open("Links.txt"));
+            bufferedReader = new BufferedReader(inputStreamReader);
+            line=bufferedReader.readLine();
+            while(line!=null) {
+                linePieces = Arrays.asList(line.split(",")).iterator();
+                links.add(new Link(linePieces.next(),linePieces.next(),Integer.parseInt(linePieces.next())));
+                line = bufferedReader.readLine();
             }
         }catch (FileNotFoundException e){
             Log.e("Hey",e.toString());
@@ -63,9 +81,15 @@ public class FileReader {
         }
     }
 
-    public List<Element> getElements(){
-        Log.e("Just need a line to","Stick a breakpoint on");
-        return elements;
+    public List<EndPoint> getEndPoints(){
+        return endPoints;
     }
 
+    public List<SteppingStone> getSteppingStones(){
+        return steppingStones;
+    }
+
+    public List<Link> getLinks() {
+        return links;
+    }
 }

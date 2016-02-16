@@ -1,8 +1,5 @@
 package com.solutions.law.universityrouteplanner;
 
-import android.view.MotionEvent;
-
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polygon;
@@ -15,10 +12,10 @@ import java.util.List;
 public class Controller implements IController {
 
     IModel model;
-    List<Element> elements;
+    List<EndPoint> elements;
     Location location;
 
-    public Controller(IModel model,List<Element> elements){
+    public Controller(IModel model,List<EndPoint> elements){
         this.model=model;
         this.elements=elements;
         location=Location.START;
@@ -66,7 +63,7 @@ public class Controller implements IController {
 
     @Override
     public void onPolygonClick(Polygon clicked){
-        for(Element element:elements){
+        for(EndPoint element:elements){
             if(element.sameShape(clicked)){
                 if(location==Location.START) {
                     model.startLoc(element.getName());
