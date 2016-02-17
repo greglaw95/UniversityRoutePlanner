@@ -11,4 +11,5 @@ public interface IModel {
     public void startLoc(String item);
     public void endLoc(String item);
     public void newRoute();
+    public void setError(String error);
 }

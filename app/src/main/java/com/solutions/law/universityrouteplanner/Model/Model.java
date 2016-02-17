@@ -22,6 +22,7 @@ public class Model implements IModel {
     private INode endLoc;
     private List<INode> graph;
     private List<String> routeSelected;
+    private String error;
 
     public Model(List<INode> graph,PathFindingAlgorithm algorithm){
         this.algorithm=algorithm;
@@ -29,6 +30,7 @@ public class Model implements IModel {
         listeners=new ArrayList<>();
         startLoc=null;
         endLoc=null;
+        error=null;
         algorithm.setUp(graph);
     }
 
@@ -71,8 +73,20 @@ public class Model implements IModel {
 
     @Override
     public void newRoute(){
-        routeSelected =algorithm.findRoute(startLoc,endLoc);
+        if(startLoc.equals(endLoc)){
+            error="Cannot route to and from the same location.";
+        }else {
+            routeSelected = algorithm.findRoute(startLoc, endLoc);
+        }
         alertAll();
+    }
+
+    @Override
+    public void setError(String error){
+        this.error=error;
+        if(error!=null){
+            alertAll();
+        }
     }
 
 
@@ -90,7 +104,7 @@ public class Model implements IModel {
             endName=endLoc.getName();
         }
         for(RoutePlannerListener listener:listeners){
-            listener.update(new ModelState(startName,endName,routeSelected));
+            listener.update(new ModelState(startName,endName,routeSelected,error));
         }
     }
 }

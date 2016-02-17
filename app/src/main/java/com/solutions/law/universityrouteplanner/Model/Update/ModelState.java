@@ -11,11 +11,18 @@ public class ModelState implements RoutePlannerState {
     private String startLoc;
     private String endLoc;
     private List<String> routeSelected;
+    private String error;
 
-    public ModelState(String startLoc,String endLoc,List<String> routeSelected){
+    public ModelState(String startLoc,String endLoc,List<String> routeSelected,String error){
         this.startLoc=startLoc;
         this.endLoc=endLoc;
         this.routeSelected=routeSelected;
+        this.error=error;
+    }
+
+    @Override
+    public String getError(){
+        return error;
     }
 
     public String getStartLoc(){

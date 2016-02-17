@@ -10,6 +10,8 @@ public interface IController extends GoogleMap.OnPolygonClickListener {
         START,END
     }
 
+    public void errorAccepted();
+    
     public void focusOn(Location location);
 
     public void route();

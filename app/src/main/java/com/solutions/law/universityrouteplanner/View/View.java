@@ -1,5 +1,6 @@
 package com.solutions.law.universityrouteplanner.View;
 
+import android.app.FragmentManager;
 import android.graphics.Color;
 import android.view.MotionEvent;
 import android.widget.Button;
@@ -28,13 +29,18 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
     private EditText startPoint;
     private EditText endPoint;
     private RoutePlannerState prevState;
+    private ErrorMessageDialogFragment errorReporter;
+    private FragmentManager supportFragmentManager;
 
-    public View(IController control, List<EndPoint> endPoints, List<MidPoint> midPoints, EditText startPoint, EditText endPoint, Button directionsButton) {
+    public View(IController control, List<EndPoint> endPoints, List<MidPoint> midPoints, EditText startPoint, EditText endPoint, Button directionsButton,FragmentManager fragmentManager) {
         this.endPoints = endPoints;
         this.midPoints = midPoints;
         this.controller = control;
         this.startPoint = startPoint;
         this.endPoint = endPoint;
+        this.supportFragmentManager=fragmentManager;
+        errorReporter=new ErrorMessageDialogFragment();
+        errorReporter.setController(controller);
         this.startPoint.setOnTouchListener(new android.view.View.OnTouchListener() {
             @Override
             public boolean onTouch(android.view.View v, MotionEvent event) {
@@ -77,6 +83,7 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
             updateText(startPoint, state.getStartLoc());
             updateText(endPoint, state.getEndLoc());
             updateMap(state.getStartLoc(),state.getEndLoc(),state.getRouteSelected());
+            updateError(state.getError());
         } else {
             if (prevState.getStartLoc()==null||!prevState.getStartLoc().equals(state.getStartLoc())) {
                 updateText(startPoint, state.getStartLoc());
@@ -88,6 +95,9 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
             }
             if (earlyChange || prevState.getRouteSelected()==null || !prevState.getRouteSelected().equals(state.getRouteSelected())) {
                 updateMap(state.getStartLoc(), state.getEndLoc(), state.getRouteSelected());
+            }
+            if(prevState.getError()==null||!prevState.getError().equals(state.getError())){
+                updateError(state.getError());
             }
         }
         prevState = state;
@@ -139,5 +149,11 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
         }
     }
 
+    private void updateError(String error){
+        if(error!=null) {
+            errorReporter.setMessage(error);
+            errorReporter.show(supportFragmentManager, "Error");
+        }
+    }
 
 }

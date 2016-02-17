@@ -24,6 +24,11 @@ public class Controller implements IController {
     }
 
     @Override
+    public void errorAccepted(){
+        model.setError(null);
+    }
+
+    @Override
     public void focusOn(Location location){
         this.location=location;
     }
