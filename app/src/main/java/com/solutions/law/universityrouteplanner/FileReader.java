@@ -71,7 +71,7 @@ public class FileReader {
             line=bufferedReader.readLine();
             while(line!=null) {
                 linePieces = Arrays.asList(line.split(",")).iterator();
-                links.add(new Link(linePieces.next(),linePieces.next(),Integer.parseInt(linePieces.next())));
+                links.add(new Link(linePieces.next(),linePieces.next(),Double.parseDouble(linePieces.next())));
                 line = bufferedReader.readLine();
             }
         }catch (FileNotFoundException e){

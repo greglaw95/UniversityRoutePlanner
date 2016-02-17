@@ -23,8 +23,6 @@ public class MainActivity extends FragmentActivity{
     List<Link> links;
     List<SteppingStone> steppingStones;
     List<EndPoint> endPoints;
-    Map<LatLngPair,List<LatLngPair>> hiddenRoutes;
-    int requestsLeftToReturn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,28 +31,13 @@ public class MainActivity extends FragmentActivity{
         links = read.getLinks();
         steppingStones=read.getSteppingStones();
         endPoints=read.getEndPoints();
-        hiddenRoutes=new HashMap<>();
-        requestsLeftToReturn=factorial(steppingStones.size() - 1);
         for (int i = 0; i < steppingStones.size() - 1; i++) {
             for (int j = i + 1; j < steppingStones.size(); j++) {
-                new OutdoorDirectionsFinder(steppingStones.get(i), steppingStones.get(j), this).execute();
+                links.add(approximateDuration(steppingStones.get(i),steppingStones.get(j)));
             }
         }
-    }
-
-    public synchronized void finished(OutdoorDirectionsFinder directions){
-        links.add(new Link(directions.getStart().getName(),directions.getEnd().getName(),directions.getDuration()));
-        hiddenRoutes.put(directions.getBothEnds(),directions.getRoute());
-        requestsLeftToReturn--;
-        if(requestsLeftToReturn<1){
-            finishCreation();
-        }
-    }
-
-    private void finishCreation(){
-        Log.d("Just need a break","");
         GraphBuilder gb = new GraphBuilder(endPoints,steppingStones,links);
-        Model model = new Model();
+        Model model = new Model(gb.getGraph(),new DijkstrasAlgorithm());
         Controller controller = new Controller(model,endPoints);
         setContentView(R.layout.activity_outdoor);
         EditText textOne =(EditText) findViewById(R.id.locationOne);
@@ -68,13 +51,14 @@ public class MainActivity extends FragmentActivity{
         model.addListener(view);
     }
 
-    public int factorial(int start){
-        if(start==1){
-            return 1;
-        }else{
-            return start*factorial(start-1);
-        }
+    private Link approximateDuration(SteppingStone one,SteppingStone two){
+        Double duration=Math.abs(one.getCoOrd().latitude-two.getCoOrd().latitude);
+        duration=duration+Math.abs(one.getCoOrd().longitude-two.getCoOrd().longitude);
+        duration=duration*48093.36;
+        return new Link(one.getName(),two.getName(),duration);
     }
+
+
 
 
 }

@@ -9,14 +9,15 @@ import java.util.List;
  */
 public class ModelState implements RoutePlannerState {
     CameraPosition position;
-    List<String> userSelected;
     String startLoc;
     String endLoc;
+    List<String> routeSelected;
 
-    public ModelState(CameraPosition position,String startLoc,String endLoc){
+    public ModelState(CameraPosition position,String startLoc,String endLoc,List<String> routeSelected){
         this.position=position;
         this.startLoc=startLoc;
         this.endLoc=endLoc;
+        this.routeSelected=routeSelected;
     }
 
     public CameraPosition getLocation(){
@@ -29,5 +30,9 @@ public class ModelState implements RoutePlannerState {
 
     public String getEndLoc(){
         return endLoc;
+    }
+
+    public List<String> getRouteSelected(){
+        return routeSelected;
     }
 }

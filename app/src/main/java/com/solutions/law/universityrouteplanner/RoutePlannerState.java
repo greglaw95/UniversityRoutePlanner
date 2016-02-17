@@ -11,4 +11,5 @@ public interface RoutePlannerState {
     public CameraPosition getLocation();
     public String getStartLoc();
     public String getEndLoc();
+    public List<String> getRouteSelected();
 }

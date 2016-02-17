@@ -10,7 +10,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -73,10 +75,11 @@ public class View implements OnMapReadyCallback,RoutePlannerListener {
 
     @Override
     public void update(RoutePlannerState state){
+        List<SteppingStone> route;
         if(prevState==null){
             gMap.animateCamera(CameraUpdateFactory.newCameraPosition(state.getLocation()));
         }else{
-            if(!(prevState.getEndLoc()==state.getEndLoc()&&prevState.getStartLoc()==state.getStartLoc())){
+            if(!(prevState.getEndLoc()==state.getEndLoc()&&prevState.getStartLoc()==state.getStartLoc()&&prevState.getRouteSelected()==state.getRouteSelected())){
                 gMap.clear();
                 gMap.setBuildingsEnabled(false);
                 gMap.animateCamera(CameraUpdateFactory.newCameraPosition(state.getLocation()));
@@ -94,9 +97,36 @@ public class View implements OnMapReadyCallback,RoutePlannerListener {
             if(state.getEndLoc()!=null){
                 endPoint.setText(state.getEndLoc().toCharArray(),0,state.getEndLoc().length());
             }
+            if(state.getRouteSelected()!=null){
+                route=new ArrayList<>();
+                for(String nextStep:state.getRouteSelected()){
+                    for(SteppingStone ss:steppingStones){
+                        if(ss.getName().equals(nextStep)){
+                            route.add(ss);
+                            break;
+                        }
+                    }
+                }
+                if(route.size()>1){
+                    for(int i=1;i<route.size();i++){
+                        drawLine(route.get(i - 1), route.get(i));
+                    }
+                }
+            }
         }
         prevState=state;
     }
+
+    private void drawLine(SteppingStone one,SteppingStone two){
+        OutdoorDirectionsFinder odf = new OutdoorDirectionsFinder(one,two,this);
+        odf.execute();
+        while(!odf.isDone());
+        List<LatLngPair> route = odf.getRoute();
+        for(int i=0;i<route.size();i++){
+            gMap.addPolyline(new PolylineOptions().add(route.get(i).pointOne, route.get(i).pointTwo).width(5).color(Color.RED));
+        }
+    }
+
 
     private boolean equalLists(List<String> listOne,List<String> listTwo){
         for(String elementOne:listOne){

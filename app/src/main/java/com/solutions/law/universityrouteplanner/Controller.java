@@ -28,10 +28,7 @@ public class Controller implements IController {
 
     @Override
     public void route(){
-        int i=5;
-        int j=6;
-        i=i+j;
-        j=j+i;
+        model.newRoute();
     }
 
     @Override

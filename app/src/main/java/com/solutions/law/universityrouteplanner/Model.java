@@ -12,17 +12,22 @@ import java.util.List;
  */
 public class Model implements IModel{
 
-    CameraPosition position;
-
+    private CameraPosition position;
+    private PathFindingAlgorithm algorithm;
     private List<RoutePlannerListener> listeners;
-    private String startLoc;
-    private String endLoc;
+    private Node startLoc;
+    private Node endLoc;
+    private List<Node> graph;
+    private List<String> routeSelected;
 
-    public Model(){
+    public Model(List<Node> graph,PathFindingAlgorithm algorithm){
+        this.algorithm=algorithm;
+        this.graph=graph;
         position=null;
         listeners=new ArrayList<RoutePlannerListener>();
         startLoc=null;
         endLoc=null;
+        algorithm.setUp(graph);
     }
 
     public void addListener(RoutePlannerListener newListener){
@@ -37,12 +42,39 @@ public class Model implements IModel{
     }
 
     public void startLoc(String start){
-        this.startLoc=start;
-        alertAll();
+        Boolean changed=false;
+        for(Node current:graph){
+            if(current.getName().equals(start)){
+                if(!current.equals(startLoc)){
+                    changed=true;
+                    startLoc=current;
+                }
+            }
+        }
+        if(changed) {
+            alertAll();
+        }
     }
 
     public void endLoc(String end){
-        this.endLoc=end;
+        Boolean changed=false;
+        for(Node current:graph){
+            if(current.getName().equals(end)){
+                if(!current.equals(endLoc)){
+                    changed=true;
+                    endLoc=current;
+                }
+            }
+        }
+        if(changed) {
+            alertAll();
+        }
+    }
+
+
+    //DOn't like this ridiculously coupled replace with strategy design pattern??
+    public void newRoute(){
+        routeSelected =algorithm.findRoute(startLoc,endLoc);
         alertAll();
     }
 
@@ -54,8 +86,20 @@ public class Model implements IModel{
     }
 
     private void alertAll(){
+        String startName;
+        String endName;
+        if(startLoc==null){
+            startName=null;
+        }else{
+            startName=startLoc.getName();
+        }
+        if(endLoc==null){
+            endName=null;
+        }else{
+            endName=endLoc.getName();
+        }
         for(RoutePlannerListener listener:listeners){
-            listener.update(new ModelState(position,startLoc,endLoc));
+            listener.update(new ModelState(position,startName,endName,routeSelected));
         }
     }
 }

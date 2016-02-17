@@ -9,4 +9,5 @@ public interface IModel {
     public void moveTo(CameraPosition position);
     public void startLoc(String item);
     public void endLoc(String item);
+    public void newRoute();
 }
