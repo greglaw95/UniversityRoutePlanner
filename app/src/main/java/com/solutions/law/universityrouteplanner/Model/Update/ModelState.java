@@ -1,4 +1,4 @@
-package com.solutions.law.universityrouteplanner;
+package com.solutions.law.universityrouteplanner.Model.Update;
 
 import com.google.android.gms.maps.model.CameraPosition;
 
@@ -8,20 +8,14 @@ import java.util.List;
  * Created by kbb12155 on 10/02/16.
  */
 public class ModelState implements RoutePlannerState {
-    CameraPosition position;
-    String startLoc;
-    String endLoc;
-    List<String> routeSelected;
+    private String startLoc;
+    private String endLoc;
+    private List<String> routeSelected;
 
-    public ModelState(CameraPosition position,String startLoc,String endLoc,List<String> routeSelected){
-        this.position=position;
+    public ModelState(String startLoc,String endLoc,List<String> routeSelected){
         this.startLoc=startLoc;
         this.endLoc=endLoc;
         this.routeSelected=routeSelected;
-    }
-
-    public CameraPosition getLocation(){
-        return position;
     }
 
     public String getStartLoc(){

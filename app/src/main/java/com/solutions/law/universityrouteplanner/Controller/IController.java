@@ -1,12 +1,11 @@
-package com.solutions.law.universityrouteplanner;
+package com.solutions.law.universityrouteplanner.Controller;
 
 import com.google.android.gms.maps.GoogleMap;
-import android.view.View.OnTouchListener;
 
 /**
  * Created by kbb12 on 10/02/2016.
  */
-public interface IController extends GoogleMap.OnCameraChangeListener,GoogleMap.OnPolygonClickListener {
+public interface IController extends GoogleMap.OnPolygonClickListener {
     public enum Location{
         START,END
     }
