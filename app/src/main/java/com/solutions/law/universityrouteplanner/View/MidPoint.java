@@ -8,4 +8,5 @@ import com.google.android.gms.maps.model.LatLng;
 public interface MidPoint {
     public String getName();
     public LatLng getCoOrd();
+    public String getPlane();
 }

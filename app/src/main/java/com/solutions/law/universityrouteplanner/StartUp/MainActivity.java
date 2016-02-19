@@ -38,7 +38,8 @@ public class MainActivity extends FragmentActivity{
         EditText textOne =(EditText) findViewById(R.id.locationOne);
         EditText textTwo =(EditText) findViewById(R.id.locationTwo);
         Button directionsButton = (Button) findViewById(R.id.directionsButton);
-        View view = new View(controller,new ArrayList<EndPoint>(endPoints),new ArrayList<MidPoint>(steppingStones),textOne,textTwo,directionsButton,getFragmentManager());
+        Button inOutButton = (Button) findViewById(R.id.inOutButton);
+        View view = new View(controller,new ArrayList<EndPoint>(endPoints),new ArrayList<MidPoint>(steppingStones),textOne,textTwo,directionsButton,inOutButton,getFragmentManager());
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);

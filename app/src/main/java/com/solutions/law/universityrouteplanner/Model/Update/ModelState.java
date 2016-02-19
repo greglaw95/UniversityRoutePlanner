@@ -12,12 +12,14 @@ public class ModelState implements RoutePlannerState {
     private String endLoc;
     private List<String> routeSelected;
     private String error;
+    private String plane;
 
-    public ModelState(String startLoc,String endLoc,List<String> routeSelected,String error){
+    public ModelState(String startLoc,String endLoc,List<String> routeSelected,String error,String plane){
         this.startLoc=startLoc;
         this.endLoc=endLoc;
         this.routeSelected=routeSelected;
         this.error=error;
+        this.plane=plane;
     }
 
     @Override
@@ -35,5 +37,9 @@ public class ModelState implements RoutePlannerState {
 
     public List<String> getRouteSelected(){
         return routeSelected;
+    }
+
+    public String getPlane(){
+        return plane;
     }
 }

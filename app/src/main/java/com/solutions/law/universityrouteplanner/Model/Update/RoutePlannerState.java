@@ -12,4 +12,5 @@ public interface RoutePlannerState {
     public String getEndLoc();
     public List<String> getRouteSelected();
     public String getError();
+    public String getPlane();
 }

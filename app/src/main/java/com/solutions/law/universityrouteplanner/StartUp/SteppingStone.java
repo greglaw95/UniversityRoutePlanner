@@ -9,10 +9,16 @@ import com.solutions.law.universityrouteplanner.View.MidPoint;
 public class SteppingStone implements MidPoint {
     private String name;
     private LatLng coOrd;
+    private String plane;
 
-    public SteppingStone(String name,LatLng coOrd){
+    public SteppingStone(String name,String plane,LatLng coOrd){
         this.name=name;
         this.coOrd=coOrd;
+        this.plane=plane;
+    }
+
+    public String getPlane(){
+        return plane;
     }
 
     public String getName() {

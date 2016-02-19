@@ -1,7 +1,5 @@
 package com.solutions.law.universityrouteplanner.Controller;
 
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polygon;
 import com.solutions.law.universityrouteplanner.Model.IModel;
 
@@ -21,6 +19,24 @@ public class Controller implements IController {
         this.model=model;
         this.elements=elements;
         location=Location.START;
+    }
+
+    @Override
+    public void goInside() {
+        if (model.getPlane() != "Outside") {
+            model.setPlane("Outside");
+        }else{
+            if(location==Location.START){
+                model.setPlane(model.getStart()+"1");
+            }else{
+                model.setPlane(model.getEnd()+"1");
+            }
+        }
+    }
+
+    @Override
+    public void switchPlane(String plane){
+        model.setPlane(plane);
     }
 
     @Override
@@ -47,7 +63,6 @@ public class Controller implements IController {
                 }else{
                     model.endLoc(element.getName());
                 }
-                location=Location.END;
                 return;
             }
         }

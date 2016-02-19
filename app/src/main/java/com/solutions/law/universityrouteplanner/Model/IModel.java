@@ -12,4 +12,8 @@ public interface IModel {
     public void endLoc(String item);
     public void newRoute();
     public void setError(String error);
+    public void setPlane(String plane);
+    public String getPlane();
+    public String getStart();
+    public String getEnd();
 }

@@ -13,10 +13,17 @@ import java.util.List;
 public class SelectableEndPoint implements Selectable,EndPoint {
     private String name;
     private List<LatLng> coOrds;
+    private String plane;
 
-    public SelectableEndPoint(String name, List<LatLng> coOrds){
+    public SelectableEndPoint(String name, List<LatLng> coOrds,String plane){
         this.name=name;
         this.coOrds=coOrds;
+        this.plane=plane;
+    }
+
+    @Override
+    public String getPlane(){
+        return plane;
     }
 
     @Override
@@ -45,5 +52,17 @@ public class SelectableEndPoint implements Selectable,EndPoint {
             }
         }
         return true;
+    }
+
+    public LatLng getCentre(){
+        double latitude=0;
+        double longitude=0;
+        for(LatLng current:coOrds){
+            latitude+=current.latitude;
+            longitude+=current.longitude;
+        }
+        latitude=latitude/coOrds.size();
+        longitude=longitude/coOrds.size();
+        return new LatLng(latitude,longitude);
     }
 }

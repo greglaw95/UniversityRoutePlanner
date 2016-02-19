@@ -4,5 +4,6 @@
     <string name="locationOneHint">Start</string>
     <string name="locationTwoHint">Destination</string>
     <string name="directionsButton">Route</string>
+    <string name="inOutButton">In/Out</string>
     <string name="accept">OK</string>
 </resources>

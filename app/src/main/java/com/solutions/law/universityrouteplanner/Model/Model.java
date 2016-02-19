@@ -1,13 +1,10 @@
 package com.solutions.law.universityrouteplanner.Model;
 
-import com.google.android.gms.maps.model.CameraPosition;
 import com.solutions.law.universityrouteplanner.Model.Graph.INode;
 import com.solutions.law.universityrouteplanner.Model.PathFinding.PathFindingAlgorithm;
 import com.solutions.law.universityrouteplanner.Model.Update.ModelState;
 import com.solutions.law.universityrouteplanner.View.RoutePlannerListener;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +20,7 @@ public class Model implements IModel {
     private List<INode> graph;
     private List<String> routeSelected;
     private String error;
+    private String plane;
 
     public Model(List<INode> graph,PathFindingAlgorithm algorithm){
         this.algorithm=algorithm;
@@ -31,7 +29,28 @@ public class Model implements IModel {
         startLoc=null;
         endLoc=null;
         error=null;
+        plane="Outside";
         algorithm.setUp(graph);
+    }
+
+    @Override
+    public String getPlane(){
+        return plane;
+    }
+
+    @Override
+    public String getStart(){
+        return startLoc.getName();
+    }
+
+    @Override
+    public String getEnd(){
+        return endLoc.getName();
+    }
+    @Override
+    public void setPlane(String plane){
+        this.plane=plane;
+        alertAll();
     }
 
     @Override
@@ -73,9 +92,11 @@ public class Model implements IModel {
 
     @Override
     public void newRoute(){
-        if(startLoc.equals(endLoc)){
+        if(startLoc==null||endLoc==null) {
+            error = "Need a start and end destination to route between";
+        }else if(startLoc.equals(endLoc)){
             error="Cannot route to and from the same location.";
-        }else {
+        }else{
             routeSelected = algorithm.findRoute(startLoc, endLoc);
         }
         alertAll();
@@ -104,7 +125,7 @@ public class Model implements IModel {
             endName=endLoc.getName();
         }
         for(RoutePlannerListener listener:listeners){
-            listener.update(new ModelState(startName,endName,routeSelected,error));
+            listener.update(new ModelState(startName,endName,routeSelected,error,plane));
         }
     }
 }

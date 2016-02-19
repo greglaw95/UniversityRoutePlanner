@@ -40,7 +40,8 @@ public class FileReader {
     }
 
     private void buildEndPoints(AssetManager assetManager)throws IOException{
-        StringBuilder name;
+        String name;
+        String plane;
         List<LatLng> coOrds;
         int limit;
         Iterator<String> linePieces;
@@ -48,22 +49,15 @@ public class FileReader {
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
         String line=bufferedReader.readLine();
         while(line!=null){
-            name=new StringBuilder();
             coOrds=new ArrayList<>();
-            linePieces= Arrays.asList(line.split(" ")).iterator();
-            limit=Integer.parseInt(linePieces.next());
-            for(int i=0;i<limit;i++){
-                if(i!=0){
-                    name.append(" ");
-                }
-                name.append(linePieces.next());
-            }
+            linePieces= Arrays.asList(line.split(",")).iterator();
+            name=linePieces.next();
+            plane=linePieces.next();
             limit=Integer.parseInt(linePieces.next());
             for(int i=0;i<limit;i++){
                 coOrds.add(new LatLng(Double.parseDouble(linePieces.next()),Double.parseDouble(linePieces.next())));
             }
-
-            endPoints.add(new SelectableEndPoint(name.toString(),coOrds));
+            endPoints.add(new SelectableEndPoint(name,coOrds,plane));
             line=bufferedReader.readLine();
         }
     }
@@ -74,8 +68,8 @@ public class FileReader {
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
         String line=bufferedReader.readLine();
         while(line!=null) {
-            linePieces = Arrays.asList(line.split(" ")).iterator();
-            steppingStones.add(new SteppingStone(linePieces.next(), new LatLng(Double.parseDouble(linePieces.next()), Double.parseDouble(linePieces.next()))));
+            linePieces = Arrays.asList(line.split(",")).iterator();
+            steppingStones.add(new SteppingStone(linePieces.next(),linePieces.next(),new LatLng(Double.parseDouble(linePieces.next()), Double.parseDouble(linePieces.next()))));
             line = bufferedReader.readLine();
         }
     }

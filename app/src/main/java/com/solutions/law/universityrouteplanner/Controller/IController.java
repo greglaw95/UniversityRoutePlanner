@@ -15,4 +15,8 @@ public interface IController extends GoogleMap.OnPolygonClickListener {
     public void focusOn(Location location);
 
     public void route();
+
+    public void switchPlane(String plane);
+
+    public void goInside();
 }

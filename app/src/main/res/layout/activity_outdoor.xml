@@ -32,6 +32,11 @@
             android:layout_gravity="bottom"
             tools:context=".StartUp.MainActivity"
             tools:layout="@layout/activity_outdoor" />
+        <Button android:id="@+id/inOutButton"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="left|bottom"
+            android:text="@string/inOutButton" />
         <Button android:id="@+id/directionsButton"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"

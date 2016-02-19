@@ -10,4 +10,6 @@ import java.util.List;
 public interface EndPoint {
     public String getName();
     public List<LatLng> getCoOrds();
+    public String getPlane();
+    public LatLng getCentre();
 }
