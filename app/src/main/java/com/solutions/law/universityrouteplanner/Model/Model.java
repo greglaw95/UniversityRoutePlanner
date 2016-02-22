@@ -1,10 +1,16 @@
 package com.solutions.law.universityrouteplanner.Model;
 
-import com.solutions.law.universityrouteplanner.Model.Graph.INode;
-import com.solutions.law.universityrouteplanner.Model.PathFinding.PathFindingAlgorithm;
-import com.solutions.law.universityrouteplanner.Model.Update.ModelState;
+import android.content.Context;
+import android.os.Environment;
+import android.provider.Settings;
+
+import com.google.android.gms.maps.model.LatLng;
 import com.solutions.law.universityrouteplanner.View.RoutePlannerListener;
 
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,119 +19,70 @@ import java.util.List;
  */
 public class Model implements IModel {
 
-    private PathFindingAlgorithm algorithm;
-    private List<RoutePlannerListener> listeners;
-    private INode startLoc;
-    private INode endLoc;
-    private List<INode> graph;
-    private List<String> routeSelected;
-    private String error;
     private String plane;
+    private String room;
+    private List<RoutePlannerListener> listeners;
+    private List<LatLng> points;
+    private Context context;
 
-    public Model(List<INode> graph,PathFindingAlgorithm algorithm){
-        this.algorithm=algorithm;
-        this.graph=graph;
+
+    public Model(Context context){
+        this.context=context;
         listeners=new ArrayList<>();
-        startLoc=null;
-        endLoc=null;
-        error=null;
-        plane="Outside";
-        algorithm.setUp(graph);
+        points=new ArrayList<>();
     }
 
-    @Override
-    public String getPlane(){
-        return plane;
+    public void addPoint(LatLng newPoint){
+        points.add(newPoint);
+        alertAll();
     }
 
-    @Override
-    public String getStart(){
-        return startLoc.getName();
+
+    public void select(){
+        StringBuilder line = new StringBuilder();
+        line.append(room);
+        line.append(",");
+        line.append(plane);
+        line.append(",");
+        line.append(points.size());
+        for(LatLng current:points){
+            line.append(",");
+            line.append(current.latitude);
+            line.append(",");
+            line.append(current.longitude);
+        }
+        try {
+            FileOutputStream outputStream = openFileOutput("Filename.txt",context.MODE_WORLD_WRITEABLE);
+            outputStream.write(line.toString().getBytes());
+            outputStream.close();
+            clear();
+            alertAll();
+        }catch(IOException e){
+            String newString=e.getMessage();
+        }
     }
 
-    @Override
-    public String getEnd(){
-        return endLoc.getName();
+    public void clear(){
+        points.clear();
+        alertAll();
     }
-    @Override
-    public void setPlane(String plane){
+
+    public void currentRoom(String room){
+        this.room=room;
+    }
+
+    public void currentPlane(String plane){
         this.plane=plane;
-        alertAll();
     }
 
-    @Override
-    public void addListener(RoutePlannerListener newListener){
-        listeners.add(newListener);
+    public void addListener(RoutePlannerListener listener){
+        listeners.add(listener);
     }
-
-    @Override
-    public void startLoc(String start){
-        Boolean changed=false;
-        for(INode current:graph){
-            if(current.getName().equals(start)){
-                if(!current.equals(startLoc)){
-                    changed=true;
-                    startLoc=current;
-                }
-            }
-        }
-        if(changed) {
-            alertAll();
-        }
-    }
-
-    @Override
-    public void endLoc(String end){
-        Boolean changed=false;
-        for(INode current:graph){
-            if(current.getName().equals(end)){
-                if(!current.equals(endLoc)){
-                    changed=true;
-                    endLoc=current;
-                }
-            }
-        }
-        if(changed) {
-            alertAll();
-        }
-    }
-
-    @Override
-    public void newRoute(){
-        if(startLoc==null||endLoc==null) {
-            error = "Need a start and end destination to route between";
-        }else if(startLoc.equals(endLoc)){
-            error="Cannot route to and from the same location.";
-        }else{
-            routeSelected = algorithm.findRoute(startLoc, endLoc);
-        }
-        alertAll();
-    }
-
-    @Override
-    public void setError(String error){
-        this.error=error;
-        if(error!=null){
-            alertAll();
-        }
-    }
-
 
     private void alertAll(){
-        String startName;
-        String endName;
-        if(startLoc==null){
-            startName=null;
-        }else{
-            startName=startLoc.getName();
-        }
-        if(endLoc==null){
-            endName=null;
-        }else{
-            endName=endLoc.getName();
-        }
         for(RoutePlannerListener listener:listeners){
-            listener.update(new ModelState(startName,endName,routeSelected,error,plane));
+            listener.update(new RoutePlannerState(plane,room,points));
         }
     }
+
 }

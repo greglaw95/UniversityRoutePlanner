@@ -1,5 +1,6 @@
 package com.solutions.law.universityrouteplanner.Controller;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polygon;
 import com.solutions.law.universityrouteplanner.Model.IModel;
 
@@ -12,60 +13,33 @@ import java.util.List;
 public class Controller implements IController {
 
     private IModel model;
-    private List<Selectable> elements;
-    private Location location;
 
-    public Controller(IModel model,List<Selectable> elements){
+    public Controller(IModel model){
         this.model=model;
-        this.elements=elements;
-        location=Location.START;
     }
 
     @Override
-    public void goInside() {
-        if (model.getPlane() != "Outside") {
-            model.setPlane("Outside");
-        }else{
-            if(location==Location.START){
-                model.setPlane(model.getStart()+"1");
-            }else{
-                model.setPlane(model.getEnd()+"1");
-            }
-        }
+    public void setRoom(CharSequence room){
+        model.currentRoom(room.toString());
     }
 
     @Override
-    public void switchPlane(String plane){
-        model.setPlane(plane);
+    public void setPlane(CharSequence newPlane) {
+        model.currentPlane(newPlane.toString());
     }
 
     @Override
-    public void errorAccepted(){
-        model.setError(null);
+    public void select(){
+        model.select();
     }
 
     @Override
-    public void focusOn(Location location){
-        this.location=location;
+    public void clear(){
+        model.clear();
     }
 
     @Override
-    public void route(){
-        model.newRoute();
+    public void addPoint(LatLng newPoint){
+        model.addPoint(newPoint);
     }
-
-    @Override
-    public void onPolygonClick(Polygon clicked){
-        for(Selectable element:elements){
-            if(element.sameShape(clicked)){
-                if(location==Location.START) {
-                    model.startLoc(element.getName());
-                }else{
-                    model.endLoc(element.getName());
-                }
-                return;
-            }
-        }
-    }
-
 }

@@ -32,15 +32,15 @@
             android:layout_gravity="bottom"
             tools:context=".StartUp.MainActivity"
             tools:layout="@layout/activity_outdoor" />
-        <Button android:id="@+id/inOutButton"
+        <Button android:id="@+id/clearButton"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:layout_gravity="left|bottom"
-            android:text="@string/inOutButton" />
-        <Button android:id="@+id/directionsButton"
+            android:text="@string/clearButton" />
+        <Button android:id="@+id/selectButton"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:layout_gravity="right|bottom"
-            android:text="@string/directionsButton" />
+            android:text="@string/selectButton" />
     </FrameLayout>
     </LinearLayout>
