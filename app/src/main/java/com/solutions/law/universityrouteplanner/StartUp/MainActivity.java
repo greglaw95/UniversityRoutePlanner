@@ -21,7 +21,6 @@ public class MainActivity extends FragmentActivity{
         Model model = new Model(this);
         Controller controller = new Controller(model);
         EditText plane =(EditText) findViewById(R.id.locationOne);
-        plane.setText(getFilesDir().getName());
         EditText room =(EditText) findViewById(R.id.locationTwo);
         Button selectButton = (Button) findViewById(R.id.selectButton);
         Button clearButton = (Button) findViewById(R.id.clearButton);

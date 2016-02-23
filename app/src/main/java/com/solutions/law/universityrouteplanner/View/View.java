@@ -1,6 +1,8 @@
 package com.solutions.law.universityrouteplanner.View;
 
 import android.graphics.Color;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.widget.Button;
@@ -25,27 +27,44 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
     private final IController controller;
     private GoogleMap gMap;
 
-    public View(IController control, EditText plane, EditText room, Button selectButton,Button clearButton) {
+    public View(IController control, EditText plane, EditText room, final Button selectButton,Button clearButton) {
         this.controller = control;
-        plane.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        plane.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                controller.setPlane(v.getText());
-                return false;
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                controller.setPlane(s.toString());
             }
         });
-        room.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        room.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                controller.setRoom(v.getText());
-                return false;
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                controller.setRoom(s.toString());
             }
         });
-        selectButton.setOnTouchListener(new android.view.View.OnTouchListener() {
+        selectButton.setOnClickListener(new android.view.View.OnClickListener() {
             @Override
-            public boolean onTouch(android.view.View v, MotionEvent event) {
+            public void onClick(android.view.View v) {
                 controller.select();
-                return false;
             }
         });
         clearButton.setOnTouchListener(new android.view.View.OnTouchListener() {

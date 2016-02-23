@@ -1,8 +1,6 @@
 package com.solutions.law.universityrouteplanner.Model;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.solutions.law.universityrouteplanner.View.RoutePlannerListener;
-
 import java.util.List;
 
 /**

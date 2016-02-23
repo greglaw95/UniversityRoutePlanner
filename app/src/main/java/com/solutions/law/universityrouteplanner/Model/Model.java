@@ -2,14 +2,18 @@ package com.solutions.law.universityrouteplanner.Model;
 
 import android.content.Context;
 import android.os.Environment;
-import android.provider.Settings;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.solutions.law.universityrouteplanner.View.RoutePlannerListener;
 
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,12 +28,28 @@ public class Model implements IModel {
     private List<RoutePlannerListener> listeners;
     private List<LatLng> points;
     private Context context;
+    private List<String> entries;
 
 
     public Model(Context context){
         this.context=context;
         listeners=new ArrayList<>();
         points=new ArrayList<>();
+        entries=new ArrayList<>();
+        File file =new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),"newEndpoints.txt");
+        String line;
+        try {
+            if (file.exists()) {
+                BufferedReader input = new BufferedReader(new FileReader(file));
+                line = input.readLine();
+                while (line != null) {
+                    entries.add(line);
+                    line = input.readLine();
+                }
+            }
+        }catch(IOException e){
+
+        }
     }
 
     public void addPoint(LatLng newPoint){
@@ -51,9 +71,14 @@ public class Model implements IModel {
             line.append(",");
             line.append(current.longitude);
         }
+        entries.add(line.toString());
         try {
-            FileOutputStream outputStream = openFileOutput("Filename.txt",context.MODE_WORLD_WRITEABLE);
-            outputStream.write(line.toString().getBytes());
+            File file =new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),"newEndpoints.txt");
+            BufferedWriter outputStream = new BufferedWriter(new FileWriter(file));
+            for(String current:entries) {
+                outputStream.write(current);
+                outputStream.newLine();
+            }
             outputStream.close();
             clear();
             alertAll();
