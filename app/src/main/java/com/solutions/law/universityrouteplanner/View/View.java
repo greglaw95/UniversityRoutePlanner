@@ -60,18 +60,16 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
                 return false;
             }
         });
-        directionsButton.setOnTouchListener(new android.view.View.OnTouchListener() {
+        directionsButton.setOnClickListener(new android.view.View.OnClickListener() {
             @Override
-            public boolean onTouch(android.view.View v, MotionEvent event) {
+            public void onClick(android.view.View v) {
                 controller.route();
-                return false;
             }
         });
-        inOutButton.setOnTouchListener(new android.view.View.OnTouchListener() {
+        inOutButton.setOnClickListener(new android.view.View.OnClickListener() {
             @Override
-            public boolean onTouch(android.view.View v, MotionEvent event) {
+            public void onClick(android.view.View v) {
                 controller.goInside();
-                return false;
             }
         });
         prevState = null;
@@ -81,11 +79,9 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
         gMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        for (EndPoint current : endPoints) {
-            gMap.addPolygon(new PolygonOptions().addAll(current.getCoOrds()).strokeColor(Color.BLUE).fillColor(Color.CYAN).geodesic(true).clickable(true));
-        }
         gMap.setBuildingsEnabled(false);
         gMap.setOnPolygonClickListener(controller);
+        controller.startUp();
     }
 
     @Override
@@ -105,7 +101,7 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
                 updateText(endPoint, state.getEndLoc());
                 earlyChange = true;
             }
-            if (earlyChange || prevState.getRouteSelected()==null || !prevState.getRouteSelected().equals(state.getRouteSelected())) {
+            if (earlyChange || prevState.getRouteSelected()==null || !prevState.getRouteSelected().equals(state.getRouteSelected()) ||prevState.getPlane()==null||!prevState.getPlane().equals(state.getPlane())) {
                 updateMap(state.getStartLoc(), state.getEndLoc(), state.getRouteSelected(),state);
             }
             if(prevState.getError()==null||!prevState.getError().equals(state.getError())){

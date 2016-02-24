@@ -27,9 +27,9 @@ public class Controller implements IController {
             model.setPlane("Outside");
         }else{
             if(location==Location.START){
-                model.setPlane(model.getStart()+"1");
+                model.setPlane(model.getStart()+"11");
             }else{
-                model.setPlane(model.getEnd()+"1");
+                model.setPlane(model.getEnd()+"11");
             }
         }
     }
@@ -66,6 +66,11 @@ public class Controller implements IController {
                 return;
             }
         }
+    }
+
+    @Override
+    public void startUp(){
+        model.start();
     }
 
 }

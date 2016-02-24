@@ -128,4 +128,9 @@ public class Model implements IModel {
             listener.update(new ModelState(startName,endName,routeSelected,error,plane));
         }
     }
+
+    @Override
+    public void start(){
+        alertAll();
+    }
 }
