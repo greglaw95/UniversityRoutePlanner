@@ -26,24 +26,23 @@ public class Model implements IModel {
     private String plane;
     private String room;
     private List<RoutePlannerListener> listeners;
-    private List<LatLng> points;
-    private Context context;
-    private List<String> entries;
+    private List<Midpoint> oldPoints;
+    private Midpoint newPoint;
 
 
-    public Model(Context context){
-        this.context=context;
+    public Model(){
+        String[] blah;
         listeners=new ArrayList<>();
-        points=new ArrayList<>();
-        entries=new ArrayList<>();
-        File file =new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),"newEndpoints.txt");
+        oldPoints=new ArrayList<>();
+        File file =new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),"newMidpoints.txt");
         String line;
         try {
             if (file.exists()) {
                 BufferedReader input = new BufferedReader(new FileReader(file));
                 line = input.readLine();
                 while (line != null) {
-                    entries.add(line);
+                    blah=line.split(",");
+                    oldPoints.add(new Midpoint(blah[0],blah[1],new LatLng(Double.parseDouble(blah[2]),Double.parseDouble(blah[3]))));
                     line = input.readLine();
                 }
             }
@@ -52,31 +51,20 @@ public class Model implements IModel {
         }
     }
 
-    public void addPoint(LatLng newPoint){
-        points.add(newPoint);
+    public void addPoint(LatLng newLoc){
+        newPoint= new Midpoint(room,plane,newLoc);
         alertAll();
     }
 
 
     public void select(){
-        StringBuilder line = new StringBuilder();
-        line.append(room);
-        line.append(",");
-        line.append(plane);
-        line.append(",");
-        line.append(points.size());
-        for(LatLng current:points){
-            line.append(",");
-            line.append(current.latitude);
-            line.append(",");
-            line.append(current.longitude);
-        }
-        entries.add(line.toString());
+        oldPoints.add(newPoint.copy());
+        newPoint=null;
         try {
-            File file =new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),"newEndpoints.txt");
+            File file =new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),"newMidpoints.txt");
             BufferedWriter outputStream = new BufferedWriter(new FileWriter(file));
-            for(String current:entries) {
-                outputStream.write(current);
+            for(Midpoint current:oldPoints) {
+                outputStream.write(current.getRoom()+","+current.getPlane()+","+current.getPoint().latitude+","+current.getPoint().longitude);
                 outputStream.newLine();
             }
             outputStream.close();
@@ -88,7 +76,7 @@ public class Model implements IModel {
     }
 
     public void clear(){
-        points.clear();
+        newPoint=null;
         alertAll();
     }
 
@@ -106,7 +94,7 @@ public class Model implements IModel {
 
     private void alertAll(){
         for(RoutePlannerListener listener:listeners){
-            listener.update(new RoutePlannerState(plane,room,points));
+            listener.update(new RoutePlannerState(plane,room,oldPoints,newPoint));
         }
     }
 

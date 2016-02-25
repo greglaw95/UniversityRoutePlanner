@@ -18,7 +18,7 @@ public class MainActivity extends FragmentActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_outdoor);
-        Model model = new Model(this);
+        Model model = new Model();
         Controller controller = new Controller(model);
         EditText plane =(EditText) findViewById(R.id.locationOne);
         EditText room =(EditText) findViewById(R.id.locationTwo);

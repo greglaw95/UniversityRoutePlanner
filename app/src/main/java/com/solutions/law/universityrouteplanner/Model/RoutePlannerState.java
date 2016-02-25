@@ -9,12 +9,14 @@ import java.util.List;
 public class RoutePlannerState {
     private String room;
     private String plane;
-    private List<LatLng> points;
+    private List<Midpoint> points;
+    private Midpoint newPoint;
 
-    public RoutePlannerState(String room,String plane,List<LatLng> points){
+    public RoutePlannerState(String room,String plane,List<Midpoint> points,Midpoint newPoint){
         this.room=room;
         this.plane=plane;
         this.points=points;
+        this.newPoint=newPoint;
     }
 
     public String getPlane(){
@@ -25,7 +27,11 @@ public class RoutePlannerState {
         return room;
     }
 
-    public List<LatLng> getPoints(){
+    public List<Midpoint> getPoints(){
         return points;
+    }
+
+    public Midpoint getNewPoint(){
+        return newPoint;
     }
 }

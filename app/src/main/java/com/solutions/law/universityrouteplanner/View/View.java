@@ -12,10 +12,13 @@ import android.widget.TextView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.solutions.law.universityrouteplanner.Controller.IController;
+import com.solutions.law.universityrouteplanner.Model.Midpoint;
 import com.solutions.law.universityrouteplanner.Model.RoutePlannerState;
 
 
@@ -94,8 +97,11 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
     @Override
     public void update(RoutePlannerState state) {
         gMap.clear();
-        if(state.getPoints().size()>0) {
-            gMap.addPolygon(new PolygonOptions().addAll(state.getPoints()).strokeColor(Color.BLUE).fillColor(Color.CYAN).geodesic(true).clickable(true));
+        for(Midpoint point:state.getPoints()) {
+            gMap.addMarker(new MarkerOptions().position(point.getPoint()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+        }
+        if(state.getNewPoint()!=null){
+            gMap.addMarker(new MarkerOptions().position(state.getNewPoint().getPoint()));
         }
     }
 
