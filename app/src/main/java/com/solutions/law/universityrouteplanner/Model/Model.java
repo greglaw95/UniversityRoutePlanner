@@ -58,6 +58,9 @@ public class Model implements IModel {
 
 
     public void select(){
+        if(newPoint==null){
+            return;
+        }
         oldPoints.add(newPoint.copy());
         newPoint=null;
         try {
