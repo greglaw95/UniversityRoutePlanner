@@ -10,7 +10,7 @@ import java.util.List;
 public interface RoutePlannerState {
     public String getStartLoc();
     public String getEndLoc();
-    public List<String> getRouteSelected();
+    public List<String> getOtherConnections();
     public String getError();
     public String getPlane();
 }

@@ -1,20 +1,14 @@
 package com.solutions.law.universityrouteplanner.View;
 
-import android.app.FragmentManager;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.solutions.law.universityrouteplanner.Controller.IController;
 import com.solutions.law.universityrouteplanner.Model.Update.RoutePlannerState;
@@ -28,24 +22,19 @@ import java.util.List;
 public class View implements OnMapReadyCallback, RoutePlannerListener {
 
     private final IController controller;
-    private List<EndPoint> endPoints;
-    private List<MidPoint> midPoints;
+    private List<NodeThing> points;
     private GoogleMap gMap;
     private EditText startPoint;
     private EditText endPoint;
+    private EditText weight;
     private RoutePlannerState prevState;
-    private ErrorMessageDialogFragment errorReporter;
-    private FragmentManager supportFragmentManager;
 
-    public View(IController control, List<EndPoint> endPoints, List<MidPoint> midPoints, EditText startPoint, EditText endPoint, Button directionsButton,Button inOutButton,FragmentManager fragmentManager) {
-        this.endPoints = endPoints;
-        this.midPoints = midPoints;
+    public View(IController control, List<NodeThing> points,EditText startPoint, EditText endPoint, EditText weight, Button addButton,Button inOut) {
+        this.points = points;
         this.controller = control;
         this.startPoint = startPoint;
         this.endPoint = endPoint;
-        this.supportFragmentManager=fragmentManager;
-        errorReporter=new ErrorMessageDialogFragment();
-        errorReporter.setController(controller);
+        this.weight=weight;
         this.startPoint.setOnTouchListener(new android.view.View.OnTouchListener() {
             @Override
             public boolean onTouch(android.view.View v, MotionEvent event) {
@@ -60,13 +49,29 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
                 return false;
             }
         });
-        directionsButton.setOnClickListener(new android.view.View.OnClickListener() {
+        this.weight.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(android.view.View v) {
-                controller.route();
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                controller.weight(s.toString());
             }
         });
-        inOutButton.setOnClickListener(new android.view.View.OnClickListener() {
+        addButton.setOnClickListener(new android.view.View.OnClickListener() {
+            @Override
+            public void onClick(android.view.View v) {
+                controller.add();
+            }
+        });
+        inOut.setOnClickListener(new android.view.View.OnClickListener() {
             @Override
             public void onClick(android.view.View v) {
                 controller.goInside();
@@ -90,8 +95,7 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
         if (prevState == null) {
             updateText(startPoint, state.getStartLoc());
             updateText(endPoint, state.getEndLoc());
-            updateMap(state.getStartLoc(),state.getEndLoc(),state.getRouteSelected(),state);
-            updateError(state.getError());
+            updateMap(state.getStartLoc(), state.getEndLoc(), state.getOtherConnections(), state.getPlane());
         } else {
             if (prevState.getStartLoc()==null||!prevState.getStartLoc().equals(state.getStartLoc())) {
                 updateText(startPoint, state.getStartLoc());
@@ -101,11 +105,8 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
                 updateText(endPoint, state.getEndLoc());
                 earlyChange = true;
             }
-            if (earlyChange || prevState.getRouteSelected()==null || !prevState.getRouteSelected().equals(state.getRouteSelected()) ||prevState.getPlane()==null||!prevState.getPlane().equals(state.getPlane())) {
-                updateMap(state.getStartLoc(), state.getEndLoc(), state.getRouteSelected(),state);
-            }
-            if(prevState.getError()==null||!prevState.getError().equals(state.getError())){
-                updateError(state.getError());
+            if (earlyChange || prevState.getOtherConnections()==null || !prevState.getOtherConnections().equals(state.getOtherConnections()) ||prevState.getPlane()==null||!prevState.getPlane().equals(state.getPlane())) {
+                updateMap(state.getStartLoc(), state.getEndLoc(), state.getOtherConnections(), state.getPlane());
             }
         }
         prevState = state;
@@ -117,10 +118,11 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
         }
     }
 
-    private void updateMap(String start, String end, List<String> routeSelected,RoutePlannerState state) {
-        List<MidPoint> routeDisplay;
+    private void updateMap(String selectedOne, String selectedTwo, List<String> otherConnections,String plane) {
+        NodeThing centre=null;
+        List<NodeThing> others = new ArrayList<>();
         gMap.clear();
-        if(state.getPlane().equals("Outside")){
+        if(plane.equals("Outside")){
             gMap.setBuildingsEnabled(false);
             gMap.setIndoorEnabled(false);
             gMap.getUiSettings().setIndoorLevelPickerEnabled(false);
@@ -129,74 +131,33 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
             gMap.setIndoorEnabled(true);
             gMap.getUiSettings().setIndoorLevelPickerEnabled(true);
         }
-        for (EndPoint current : endPoints) {
-            if(current.getPlane().equals(state.getPlane())) {
-                if(gMap.getCameraPosition().zoom>17) {
-                    drawName(current);
-                }
-                if ((start != null && current.getName().equals(start)) || (end != null && current.getName().equals(end))) {
-                    gMap.addPolygon(new PolygonOptions().addAll(current.getCoOrds()).strokeColor(Color.RED).fillColor(Color.MAGENTA).geodesic(true).clickable(true));
+        for (NodeThing current : points) {
+            if(current.getPlane().equals(plane)) {
+                if ((selectedOne != null && current.getName().equals(selectedOne))){
+                    centre=current;
+                    current.draw(gMap,Color.BLUE);
+                }else if (selectedTwo != null && current.getName().equals(selectedTwo)) {
+                    current.draw(gMap,Color.BLUE);
+                    possibleAdd(current,others,otherConnections);
                 } else {
-                    gMap.addPolygon(new PolygonOptions().addAll(current.getCoOrds()).strokeColor(Color.BLUE).fillColor(Color.CYAN).geodesic(true).clickable(true));
+                    current.draw(gMap,Color.RED);
+                    possibleAdd(current,others,otherConnections);
                 }
             }
         }
-        if (routeSelected == null) {
+        if(centre==null){
             return;
         }
-        routeDisplay = new ArrayList<>();
-        for (String nextStep : routeSelected) {
-            for (MidPoint mp : midPoints) {
-                if (mp.getName().equals(nextStep)) {
-                    routeDisplay.add(mp);
-                    break;
-                }
-            }
-        }
-        if (routeDisplay.size() > 1) {
-            for (int i = 1; i < routeDisplay.size(); i++) {
-                if(routeDisplay.get(i-1).getPlane().equals(state.getPlane())&&routeDisplay.get(i).getPlane().equals(state.getPlane())) {
-                    drawLine(routeDisplay.get(i - 1), routeDisplay.get(i));
-                }else if(routeDisplay.get(i-1).getPlane().equals(state.getPlane())){
-                    //TODO add marker to let user move to routeDisplay(i) plane maybe make it green
-                }else if(routeDisplay.get(i).getPlane().equals(state.getPlane())){
-                    //TODO add marker to let user move to routeDisplay(i-1) plane maybe make it red
-                }
-            }
+        for(NodeThing current:others){
+            gMap.addPolyline(new PolylineOptions().add(centre.getPoint()).add(current.getPoint()));
         }
     }
 
-    private void drawLine(MidPoint one, MidPoint two) {
-        OutdoorDirectionsFinder odf = new OutdoorDirectionsFinder(one, two);
-        odf.execute();
-        while (!odf.isDone()) ;
-        List<LatLng[]> route = odf.getRoute();
-        for (int i = 0; i < route.size(); i++) {
-            gMap.addPolyline(new PolylineOptions().add(route.get(i)[0], route.get(i)[1]).width(5).color(Color.RED));
+    public void possibleAdd(NodeThing pos,List<NodeThing> addTo,List<String> criteria){
+        if(!criteria.contains(pos.getName())){
+            return;
         }
-    }
-
-    private void drawName(EndPoint location){
-        Paint paint = new Paint();
-        paint.setTextSize(28);
-        paint.setColor(Color.BLACK);
-        paint.setTextAlign(Paint.Align.LEFT);
-        float baseline = -paint.ascent(); // ascent() is negative
-        int width = (int) (paint.measureText(location.getName()) + 0.5f); // round
-        int height = (int) (baseline + paint.descent() + 0.5f);
-        Bitmap image = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(image);
-        canvas.drawText(location.getName(), 0, baseline, paint);
-        gMap.addMarker(new MarkerOptions()
-                .position(location.getCentre())
-                .icon(BitmapDescriptorFactory.fromBitmap(image)));
-    }
-
-    private void updateError(String error){
-        if(error!=null) {
-            errorReporter.setMessage(error);
-            errorReporter.show(supportFragmentManager, "Error");
-        }
+        addTo.add(pos);
     }
 
 }
