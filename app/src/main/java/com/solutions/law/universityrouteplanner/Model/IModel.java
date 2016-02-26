@@ -11,10 +11,10 @@ public interface IModel {
     public void addListener(RoutePlannerListener listener);
     public void startLoc(String item);
     public void endLoc(String item);
-    public void newRoute();
-    public void setError(String error);
     public void setPlane(String plane);
-    public String getPlane();
+    public void addLink();
+    public void setWeight(Double weight);
     public String getStart();
     public String getEnd();
+    public String getPlane();
 }

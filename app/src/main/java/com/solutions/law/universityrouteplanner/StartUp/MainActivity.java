@@ -1,7 +1,6 @@
 package com.solutions.law.universityrouteplanner.StartUp;
 
 import android.support.v4.app.FragmentActivity;
-import android.app.FragmentManager;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,10 +9,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.solutions.law.universityrouteplanner.Controller.Controller;
 import com.solutions.law.universityrouteplanner.Controller.Selectable;
 import com.solutions.law.universityrouteplanner.Model.Model;
-import com.solutions.law.universityrouteplanner.Model.PathFinding.DijkstrasAlgorithm;
 import com.solutions.law.universityrouteplanner.R;
-import com.solutions.law.universityrouteplanner.View.EndPoint;
-import com.solutions.law.universityrouteplanner.View.MidPoint;
+import com.solutions.law.universityrouteplanner.View.NodeThing;
 import com.solutions.law.universityrouteplanner.View.View;
 
 import java.util.ArrayList;
@@ -33,13 +30,17 @@ public class MainActivity extends FragmentActivity{
         load();
         addOutsideLinks();
         GraphBuilder gb = new GraphBuilder(endPoints,steppingStones,links);
-        Model model = new Model(gb.getGraph(),new DijkstrasAlgorithm());
-        Controller controller = new Controller(model,new ArrayList<Selectable>(endPoints));
+        Model model = new Model(gb.getGraph());
+        Controller controller = new Controller(model,new ArrayList<Selectable>(endPoints),steppingStones);
         EditText textOne =(EditText) findViewById(R.id.locationOne);
         EditText textTwo =(EditText) findViewById(R.id.locationTwo);
-        Button directionsButton = (Button) findViewById(R.id.directionsButton);
+        EditText textThree = (EditText) findViewById(R.id.weight);
+        Button addButton = (Button) findViewById(R.id.addButton);
         Button inOutButton = (Button) findViewById(R.id.inOutButton);
-        View view = new View(controller,new ArrayList<EndPoint>(endPoints),new ArrayList<MidPoint>(steppingStones),textOne,textTwo,directionsButton,inOutButton,getFragmentManager());
+        List<NodeThing> nodes = new ArrayList<>();
+        nodes.addAll(endPoints);
+        nodes.addAll(steppingStones);
+        View view = new View(controller,nodes,textOne,textTwo,textThree,addButton,inOutButton);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -63,8 +64,8 @@ public class MainActivity extends FragmentActivity{
     }
 
     private Link approximateDuration(SteppingStone one,SteppingStone two){
-        Double duration=Math.abs(one.getCoOrd().latitude-two.getCoOrd().latitude);
-        duration=duration+Math.abs(one.getCoOrd().longitude-two.getCoOrd().longitude);
+        Double duration=Math.abs(one.getPoint().latitude-two.getPoint().latitude);
+        duration=duration+Math.abs(one.getPoint().longitude-two.getPoint().longitude);
         duration=duration*48093.36;
         return new Link(one.getName(),two.getName(),duration);
     }

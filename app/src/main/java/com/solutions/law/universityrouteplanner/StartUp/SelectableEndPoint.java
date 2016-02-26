@@ -1,7 +1,11 @@
 package com.solutions.law.universityrouteplanner.StartUp;
 
+import android.graphics.Color;
+
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.PolygonOptions;
 import com.solutions.law.universityrouteplanner.Controller.Selectable;
 import com.solutions.law.universityrouteplanner.View.EndPoint;
 
@@ -54,7 +58,7 @@ public class SelectableEndPoint implements Selectable,EndPoint {
         return true;
     }
 
-    public LatLng getCentre(){
+    public LatLng getPoint(){
         double latitude=0;
         double longitude=0;
         for(LatLng current:coOrds){
@@ -64,5 +68,9 @@ public class SelectableEndPoint implements Selectable,EndPoint {
         latitude=latitude/coOrds.size();
         longitude=longitude/coOrds.size();
         return new LatLng(latitude,longitude);
+    }
+
+    public void draw(GoogleMap gMap,int colour){
+        gMap.addPolygon(new PolygonOptions().addAll(coOrds).strokeColor(colour).fillColor(Color.BLUE));
     }
 }

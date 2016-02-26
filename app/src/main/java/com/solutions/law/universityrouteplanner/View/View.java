@@ -9,6 +9,7 @@ import android.widget.EditText;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.IndoorBuilding;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.solutions.law.universityrouteplanner.Controller.IController;
 import com.solutions.law.universityrouteplanner.Model.Update.RoutePlannerState;
@@ -85,6 +86,18 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
         gMap = googleMap;
         gMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         gMap.setBuildingsEnabled(false);
+        gMap.setOnMarkerClickListener(controller);
+        gMap.setOnIndoorStateChangeListener(new GoogleMap.OnIndoorStateChangeListener() {
+            @Override
+            public void onIndoorBuildingFocused() {
+
+            }
+
+            @Override
+            public void onIndoorLevelActivated(IndoorBuilding indoorBuilding) {
+                controller.setLevel(indoorBuilding.getActiveLevelIndex());
+            }
+        });
         gMap.setOnPolygonClickListener(controller);
         controller.startUp();
     }

@@ -1,10 +1,19 @@
 package com.solutions.law.universityrouteplanner.Model;
 
+import android.os.Environment;
+
+import com.google.android.gms.maps.model.LatLng;
+import com.solutions.law.universityrouteplanner.Model.Graph.IEdge;
 import com.solutions.law.universityrouteplanner.Model.Graph.INode;
-import com.solutions.law.universityrouteplanner.Model.PathFinding.PathFindingAlgorithm;
 import com.solutions.law.universityrouteplanner.Model.Update.ModelState;
 import com.solutions.law.universityrouteplanner.View.RoutePlannerListener;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,24 +22,56 @@ import java.util.List;
  */
 public class Model implements IModel {
 
-    private PathFindingAlgorithm algorithm;
     private List<RoutePlannerListener> listeners;
     private INode startLoc;
     private INode endLoc;
     private List<INode> graph;
-    private List<String> routeSelected;
+    private List<String> connectedNodes;
     private String error;
     private String plane;
+    private Double weight;
+    private List<String> oldLinks;
 
-    public Model(List<INode> graph,PathFindingAlgorithm algorithm){
-        this.algorithm=algorithm;
+    public Model(List<INode> graph){
+        oldLinks= new ArrayList<>();
         this.graph=graph;
         listeners=new ArrayList<>();
         startLoc=null;
         endLoc=null;
         error=null;
+        weight=null;
         plane="Outside";
-        algorithm.setUp(graph);
+        connectedNodes= new ArrayList<>();
+        File file =new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),"newLinks.txt");
+        String line;
+        try {
+            if (file.exists()) {
+                BufferedReader input = new BufferedReader(new FileReader(file));
+                line = input.readLine();
+                while (line != null) {
+                    oldLinks.add(line);
+                    line = input.readLine();
+                }
+            }
+        }catch(IOException e){
+
+        }
+    }
+
+    @Override
+    public void addLink() {
+        oldLinks.add(startLoc.getName()+endLoc.getName()+weight);
+        try {
+            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "newlinks.txt");
+            BufferedWriter outputStream = new BufferedWriter(new FileWriter(file));
+            for(String line:oldLinks){
+                outputStream.write(line);
+                outputStream.newLine();
+            }
+            outputStream.close();
+        }catch (IOException e){
+
+        }
     }
 
     @Override
@@ -70,6 +111,10 @@ public class Model implements IModel {
             }
         }
         if(changed) {
+            connectedNodes.clear();
+            for(IEdge current:startLoc.getIEdges()){
+                connectedNodes.add(current.getOtherINode().getName());
+            }
             alertAll();
         }
     }
@@ -90,26 +135,6 @@ public class Model implements IModel {
         }
     }
 
-    @Override
-    public void newRoute(){
-        if(startLoc==null||endLoc==null) {
-            error = "Need a start and end destination to route between";
-        }else if(startLoc.equals(endLoc)){
-            error="Cannot route to and from the same location.";
-        }else{
-            routeSelected = algorithm.findRoute(startLoc, endLoc);
-        }
-        alertAll();
-    }
-
-    @Override
-    public void setError(String error){
-        this.error=error;
-        if(error!=null){
-            alertAll();
-        }
-    }
-
 
     private void alertAll(){
         String startName;
@@ -125,12 +150,17 @@ public class Model implements IModel {
             endName=endLoc.getName();
         }
         for(RoutePlannerListener listener:listeners){
-            listener.update(new ModelState(startName,endName,routeSelected,error,plane));
+            listener.update(new ModelState(startName,endName,connectedNodes,error,plane));
         }
     }
 
     @Override
     public void start(){
         alertAll();
+    }
+
+    @Override
+    public void setWeight(Double weight){
+        this.weight=weight;
     }
 }
