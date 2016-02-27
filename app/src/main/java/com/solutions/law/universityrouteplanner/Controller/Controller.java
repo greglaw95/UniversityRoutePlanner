@@ -1,5 +1,7 @@
 package com.solutions.law.universityrouteplanner.Controller;
 
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polygon;
 import com.solutions.law.universityrouteplanner.Model.IModel;
@@ -16,40 +18,38 @@ public class Controller implements IController {
     private IModel model;
     private List<Selectable> elements;
     private List<SteppingStone> stones;
+    private List<Structure> structures;
     private Location location;
-    private String building;
-    private Integer level;
+    private Structure building;
 
-    public Controller(IModel model,List<Selectable> elements,List<SteppingStone> stones){
+    public Controller(IModel model,List<Selectable> elements,List<SteppingStone> stones,List<Structure> structures){
         this.model=model;
         this.elements=elements;
         this.stones=stones;
+        this.structures = structures;
         location=Location.START;
         building=null;
-        level=null;
     }
 
     public void setLevel(int level){
-        this.level=level;
-        model.setPlane(building+level);
+        building.setLevel(level);
+        model.setPlane(building.getName()+level);
     }
 
     @Override
     public void goInside() {
-        if (model.getPlane() != "Outside") {
+        if (building!=null) {
             building=null;
-            level=null;
             model.setPlane("Outside");
         }else{
             if(location==Location.START){
-                building=model.getStart();
-                level=1;
+                building=findStructure(model.getStart());
             }else{
-                building=model.getEnd();
-                level=1;
+                building=findStructure(model.getEnd());
             }
-            model.setPlane(building+level);
+            model.setPlane(building.getName()+building.getLevel());
         }
+        onCameraChange(model.getPosition());
     }
 
     @Override
@@ -101,4 +101,52 @@ public class Controller implements IController {
         model.addLink();
     }
 
+    @Override
+    public void onCameraChange(CameraPosition position) {
+        if(building!=null){
+            CameraPosition newPosition;
+            float newZoom=position.zoom;
+            Double newLng=position.target.longitude;
+            Double newLat=position.target.latitude;
+            if(position.zoom<building.getMinZoomAllowed()){
+                newZoom=building.getMinZoomAllowed();
+            }
+            double halfRange=0.5*(360/(Math.pow(2,newZoom)));
+            if(position.target.longitude<building.getMinLngAllowed()+halfRange){
+                newLng=building.getMinLngAllowed()+halfRange;
+            }
+            if(position.target.longitude>building.getMaxLngAllowed()-halfRange){
+                if(newLng.equals(building.getMinLngAllowed())){
+                    newLng=position.target.longitude;
+                }else {
+                    newLng = building.getMaxLngAllowed()-halfRange;
+                }
+            }
+            if(position.target.latitude<building.getMinLatAllowed()+halfRange){
+                newLat=building.getMinLatAllowed()+halfRange;
+            }
+            if(position.target.latitude>building.getMaxLatAllowed()-halfRange){
+                if(newLat.equals(building.getMinLatAllowed())){
+                    newLat=position.target.latitude;
+                }else {
+                    newLat=building.getMaxLatAllowed()-halfRange;
+                }
+            }
+            newPosition = new CameraPosition(new LatLng(newLat,newLng),newZoom,position.tilt,position.bearing);
+            if(!newPosition.equals(position)) {
+                model.setPosition(newPosition);
+                return;
+            }
+        }
+        model.setPosition(position);
+    }
+
+    private Structure findStructure(String name){
+        for(Structure possible: structures){
+            if(possible.getName().equals(name)){
+                return possible;
+            }
+        }
+        return null;
+    }
 }

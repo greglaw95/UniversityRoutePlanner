@@ -3,10 +3,12 @@ package com.solutions.law.universityrouteplanner.View;
 import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.IndoorBuilding;
@@ -90,15 +92,16 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
         gMap.setOnIndoorStateChangeListener(new GoogleMap.OnIndoorStateChangeListener() {
             @Override
             public void onIndoorBuildingFocused() {
-
+                Log.d("Just need a", "breakpoint");
             }
 
             @Override
             public void onIndoorLevelActivated(IndoorBuilding indoorBuilding) {
-                controller.setLevel(indoorBuilding.getActiveLevelIndex());
+                controller.setLevel(indoorBuilding.getLevels().size()-indoorBuilding.getActiveLevelIndex());
             }
         });
         gMap.setOnPolygonClickListener(controller);
+        gMap.setOnCameraChangeListener(controller);
         controller.startUp();
     }
 
@@ -108,6 +111,9 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
         if (prevState == null) {
             updateText(startPoint, state.getStartLoc());
             updateText(endPoint, state.getEndLoc());
+            if(state.getPosition()!=null) {
+                gMap.animateCamera(CameraUpdateFactory.newCameraPosition(state.getPosition()));
+            }
             updateMap(state.getStartLoc(), state.getEndLoc(), state.getOtherConnections(), state.getPlane());
         } else {
             if (prevState.getStartLoc()==null||!prevState.getStartLoc().equals(state.getStartLoc())) {
@@ -120,6 +126,9 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
             }
             if (earlyChange || prevState.getOtherConnections()==null || !prevState.getOtherConnections().equals(state.getOtherConnections()) ||prevState.getPlane()==null||!prevState.getPlane().equals(state.getPlane())) {
                 updateMap(state.getStartLoc(), state.getEndLoc(), state.getOtherConnections(), state.getPlane());
+            }
+            if((state.getPosition()!=null)&&(prevState.getPosition()==null||!prevState.getPosition().equals(state.getPosition()))){
+                gMap.animateCamera(CameraUpdateFactory.newCameraPosition(state.getPosition()));
             }
         }
         prevState = state;

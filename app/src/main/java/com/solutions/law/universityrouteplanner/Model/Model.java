@@ -3,7 +3,8 @@ package com.solutions.law.universityrouteplanner.Model;
 import android.os.Environment;
 import android.util.Log;
 
-import com.google.android.gms.maps.model.LatLng;
+
+import com.google.android.gms.maps.model.CameraPosition;
 import com.solutions.law.universityrouteplanner.Model.Graph.IEdge;
 import com.solutions.law.universityrouteplanner.Model.Graph.INode;
 import com.solutions.law.universityrouteplanner.Model.Update.ModelState;
@@ -32,6 +33,7 @@ public class Model implements IModel {
     private String plane;
     private Double weight;
     private List<String> oldLinks;
+    private CameraPosition position;
 
     public Model(List<INode> graph){
         oldLinks= new ArrayList<>();
@@ -41,6 +43,7 @@ public class Model implements IModel {
         endLoc=null;
         error=null;
         weight=null;
+        position=null;
         plane="Outside";
         connectedNodes= new ArrayList<>();
         File file =new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),"newLinks.txt");
@@ -61,7 +64,7 @@ public class Model implements IModel {
 
     @Override
     public void addLink() {
-        oldLinks.add(startLoc.getName()+","+endLoc.getName()+","+weight);
+        oldLinks.add(startLoc.getName() + "," + endLoc.getName() + "," + weight);
         try {
             File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "newlinks.txt");
             if(!file.exists()){
@@ -79,8 +82,9 @@ public class Model implements IModel {
     }
 
     @Override
-    public String getPlane(){
-        return plane;
+    public void setPosition(CameraPosition position){
+        this.position=position;
+        alertAll();
     }
 
     @Override
@@ -140,6 +144,11 @@ public class Model implements IModel {
     }
 
 
+    @Override
+    public CameraPosition getPosition() {
+        return position;
+    }
+
     private void alertAll(){
         String startName;
         String endName;
@@ -154,7 +163,7 @@ public class Model implements IModel {
             endName=endLoc.getName();
         }
         for(RoutePlannerListener listener:listeners){
-            listener.update(new ModelState(startName,endName,connectedNodes,error,plane));
+            listener.update(new ModelState(startName,endName,connectedNodes,error,plane,position));
         }
     }
 

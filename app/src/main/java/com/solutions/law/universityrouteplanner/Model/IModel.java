@@ -16,5 +16,6 @@ public interface IModel {
     public void setWeight(Double weight);
     public String getStart();
     public String getEnd();
-    public String getPlane();
+    public void setPosition(CameraPosition position);
+    public CameraPosition getPosition();
 }

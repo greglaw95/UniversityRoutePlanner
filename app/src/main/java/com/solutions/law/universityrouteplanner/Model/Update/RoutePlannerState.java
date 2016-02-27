@@ -12,4 +12,5 @@ public interface RoutePlannerState {
     public String getEndLoc();
     public List<String> getOtherConnections();
     public String getPlane();
+    public CameraPosition getPosition();
 }
