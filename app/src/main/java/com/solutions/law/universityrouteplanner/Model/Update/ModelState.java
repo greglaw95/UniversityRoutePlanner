@@ -13,13 +13,20 @@ public class ModelState implements RoutePlannerState {
     private List<String> routeSelected;
     private String error;
     private String plane;
+    private CameraPosition position;
 
-    public ModelState(String startLoc,String endLoc,List<String> routeSelected,String error,String plane){
+    public ModelState(String startLoc,String endLoc,List<String> routeSelected,String error,String plane,CameraPosition position){
         this.startLoc=startLoc;
         this.endLoc=endLoc;
         this.routeSelected=routeSelected;
         this.error=error;
         this.plane=plane;
+        this.position=position;
+    }
+
+    @Override
+    public CameraPosition getPosition() {
+        return position;
     }
 
     @Override

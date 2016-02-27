@@ -9,6 +9,7 @@ import android.widget.EditText;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.solutions.law.universityrouteplanner.Controller.Controller;
 import com.solutions.law.universityrouteplanner.Controller.Selectable;
+import com.solutions.law.universityrouteplanner.Controller.Structure;
 import com.solutions.law.universityrouteplanner.Model.Model;
 import com.solutions.law.universityrouteplanner.Model.PathFinding.DijkstrasAlgorithm;
 import com.solutions.law.universityrouteplanner.R;
@@ -34,7 +35,13 @@ public class MainActivity extends FragmentActivity{
         addOutsideLinks();
         GraphBuilder gb = new GraphBuilder(endPoints,steppingStones,links);
         Model model = new Model(gb.getGraph(),new DijkstrasAlgorithm());
-        Controller controller = new Controller(model,new ArrayList<Selectable>(endPoints));
+        List<Structure> structures=new ArrayList<>();
+        for(SelectableEndPoint current:endPoints){
+            if(current.getPlane().equals("Outside")){
+                structures.add(new Building(current));
+            }
+        }
+        Controller controller = new Controller(model,new ArrayList<Selectable>(endPoints),structures);
         EditText textOne =(EditText) findViewById(R.id.locationOne);
         EditText textTwo =(EditText) findViewById(R.id.locationTwo);
         Button directionsButton = (Button) findViewById(R.id.directionsButton);

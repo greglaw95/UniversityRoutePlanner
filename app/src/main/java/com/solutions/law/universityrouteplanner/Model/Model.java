@@ -1,5 +1,6 @@
 package com.solutions.law.universityrouteplanner.Model;
 
+import com.google.android.gms.maps.model.CameraPosition;
 import com.solutions.law.universityrouteplanner.Model.Graph.INode;
 import com.solutions.law.universityrouteplanner.Model.PathFinding.PathFindingAlgorithm;
 import com.solutions.law.universityrouteplanner.Model.Update.ModelState;
@@ -21,6 +22,7 @@ public class Model implements IModel {
     private List<String> routeSelected;
     private String error;
     private String plane;
+    CameraPosition position;
 
     public Model(List<INode> graph,PathFindingAlgorithm algorithm){
         this.algorithm=algorithm;
@@ -30,12 +32,8 @@ public class Model implements IModel {
         endLoc=null;
         error=null;
         plane="Outside";
+        position=null;
         algorithm.setUp(graph);
-    }
-
-    @Override
-    public String getPlane(){
-        return plane;
     }
 
     @Override
@@ -125,8 +123,19 @@ public class Model implements IModel {
             endName=endLoc.getName();
         }
         for(RoutePlannerListener listener:listeners){
-            listener.update(new ModelState(startName,endName,routeSelected,error,plane));
+            listener.update(new ModelState(startName,endName,routeSelected,error,plane,position));
         }
+    }
+
+    @Override
+    public CameraPosition getPosition() {
+        return position;
+    }
+
+    @Override
+    public void setPosition(CameraPosition position) {
+        this.position = position;
+        alertAll();
     }
 
     @Override

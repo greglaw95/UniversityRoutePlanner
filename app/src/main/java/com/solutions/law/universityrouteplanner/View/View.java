@@ -5,13 +5,16 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.IndoorBuilding;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
@@ -80,7 +83,19 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
         gMap = googleMap;
         gMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         gMap.setBuildingsEnabled(false);
+        gMap.setOnIndoorStateChangeListener(new GoogleMap.OnIndoorStateChangeListener() {
+            @Override
+            public void onIndoorBuildingFocused() {
+                Log.d("Just need a", "breakpoint");
+            }
+
+            @Override
+            public void onIndoorLevelActivated(IndoorBuilding indoorBuilding) {
+                controller.setLevel(indoorBuilding.getLevels().size() - indoorBuilding.getActiveLevelIndex());
+            }
+        });
         gMap.setOnPolygonClickListener(controller);
+        gMap.setOnCameraChangeListener(controller);
         controller.startUp();
     }
 
@@ -90,6 +105,9 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
         if (prevState == null) {
             updateText(startPoint, state.getStartLoc());
             updateText(endPoint, state.getEndLoc());
+            if(state.getPosition()!= null){
+                gMap.animateCamera(CameraUpdateFactory.newCameraPosition(state.getPosition()));
+            }
             updateMap(state.getStartLoc(),state.getEndLoc(),state.getRouteSelected(),state);
             updateError(state.getError());
         } else {
@@ -103,6 +121,9 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
             }
             if (earlyChange || prevState.getRouteSelected()==null || !prevState.getRouteSelected().equals(state.getRouteSelected()) ||prevState.getPlane()==null||!prevState.getPlane().equals(state.getPlane())) {
                 updateMap(state.getStartLoc(), state.getEndLoc(), state.getRouteSelected(),state);
+            }
+            if((state.getPosition()!=null)&&(prevState.getPosition()==null||!prevState.getPosition().equals(state.getPosition()))){
+                gMap.animateCamera(CameraUpdateFactory.newCameraPosition(state.getPosition()));
             }
             if(prevState.getError()==null||!prevState.getError().equals(state.getError())){
                 updateError(state.getError());
@@ -131,9 +152,6 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
         }
         for (EndPoint current : endPoints) {
             if(current.getPlane().equals(state.getPlane())) {
-                if(gMap.getCameraPosition().zoom>17) {
-                    drawName(current);
-                }
                 if ((start != null && current.getName().equals(start)) || (end != null && current.getName().equals(end))) {
                     gMap.addPolygon(new PolygonOptions().addAll(current.getCoOrds()).strokeColor(Color.RED).fillColor(Color.MAGENTA).geodesic(true).clickable(true));
                 } else {
@@ -174,22 +192,6 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
         for (int i = 0; i < route.size(); i++) {
             gMap.addPolyline(new PolylineOptions().add(route.get(i)[0], route.get(i)[1]).width(5).color(Color.RED));
         }
-    }
-
-    private void drawName(EndPoint location){
-        Paint paint = new Paint();
-        paint.setTextSize(28);
-        paint.setColor(Color.BLACK);
-        paint.setTextAlign(Paint.Align.LEFT);
-        float baseline = -paint.ascent(); // ascent() is negative
-        int width = (int) (paint.measureText(location.getName()) + 0.5f); // round
-        int height = (int) (baseline + paint.descent() + 0.5f);
-        Bitmap image = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(image);
-        canvas.drawText(location.getName(), 0, baseline, paint);
-        gMap.addMarker(new MarkerOptions()
-                .position(location.getCentre())
-                .icon(BitmapDescriptorFactory.fromBitmap(image)));
     }
 
     private void updateError(String error){

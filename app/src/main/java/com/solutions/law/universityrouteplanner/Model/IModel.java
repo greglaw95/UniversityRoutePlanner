@@ -14,7 +14,8 @@ public interface IModel {
     public void newRoute();
     public void setError(String error);
     public void setPlane(String plane);
-    public String getPlane();
     public String getStart();
     public String getEnd();
+    public void setPosition(CameraPosition position);
+    public CameraPosition getPosition();
 }

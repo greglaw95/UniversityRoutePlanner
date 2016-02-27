@@ -1,5 +1,7 @@
 package com.solutions.law.universityrouteplanner.Controller;
 
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polygon;
 import com.solutions.law.universityrouteplanner.Model.IModel;
 
@@ -14,29 +16,37 @@ public class Controller implements IController {
     private IModel model;
     private List<Selectable> elements;
     private Location location;
+    private List<Structure> structures;
+    private Structure currentStructure;
 
-    public Controller(IModel model,List<Selectable> elements){
+    public Controller(IModel model,List<Selectable> elements,List<Structure> structures){
         this.model=model;
         this.elements=elements;
         location=Location.START;
+        this.structures=structures;
+        currentStructure=null;
     }
 
     @Override
     public void goInside() {
-        if (model.getPlane() != "Outside") {
+        if (currentStructure!=null) {
+            currentStructure=null;
             model.setPlane("Outside");
         }else{
             if(location==Location.START){
-                model.setPlane(model.getStart()+"11");
+                currentStructure=findStructure(model.getStart());
             }else{
-                model.setPlane(model.getEnd()+"11");
+                currentStructure=findStructure(model.getEnd());
             }
+            model.setPlane(currentStructure.getName() + currentStructure.getLevel());
         }
+        onCameraChange(model.getPosition());
     }
 
     @Override
-    public void switchPlane(String plane){
-        model.setPlane(plane);
+    public void setLevel(int level){
+        currentStructure.setLevel(level);
+        model.setPlane(currentStructure.getName()+level);
     }
 
     @Override
@@ -73,4 +83,52 @@ public class Controller implements IController {
         model.start();
     }
 
+    @Override
+    public void onCameraChange(CameraPosition position) {
+        if(currentStructure!=null){
+            CameraPosition newPosition;
+            float newZoom=position.zoom;
+            Double newLng=position.target.longitude;
+            Double newLat=position.target.latitude;
+            if(position.zoom<currentStructure.getMinZoomAllowed()){
+                newZoom=currentStructure.getMinZoomAllowed();
+            }
+            double halfRange=0.5*(360/(Math.pow(2,newZoom)));
+            if(position.target.longitude<currentStructure.getMinLngAllowed()+halfRange){
+                newLng=currentStructure.getMinLngAllowed()+halfRange;
+            }
+            if(position.target.longitude>currentStructure.getMaxLngAllowed()-halfRange){
+                if(newLng.equals(currentStructure.getMinLngAllowed())){
+                    newLng=position.target.longitude;
+                }else {
+                    newLng = currentStructure.getMaxLngAllowed()-halfRange;
+                }
+            }
+            if(position.target.latitude<currentStructure.getMinLatAllowed()+halfRange){
+                newLat=currentStructure.getMinLatAllowed()+halfRange;
+            }
+            if(position.target.latitude>currentStructure.getMaxLatAllowed()-halfRange){
+                if(newLat.equals(currentStructure.getMinLatAllowed())){
+                    newLat=position.target.latitude;
+                }else {
+                    newLat=currentStructure.getMaxLatAllowed()-halfRange;
+                }
+            }
+            newPosition = new CameraPosition(new LatLng(newLat,newLng),newZoom,position.tilt,position.bearing);
+            if(!newPosition.equals(position)) {
+                model.setPosition(newPosition);
+                return;
+            }
+        }
+        model.setPosition(position);
+    }
+
+    private Structure findStructure(String name){
+        for(Structure possible: structures){
+            if(possible.getName().equals(name)){
+                return possible;
+            }
+        }
+        return null;
+    }
 }
