@@ -1,6 +1,7 @@
 package com.solutions.law.universityrouteplanner.Model;
 
 import android.os.Environment;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.solutions.law.universityrouteplanner.Model.Graph.IEdge;
@@ -60,9 +61,12 @@ public class Model implements IModel {
 
     @Override
     public void addLink() {
-        oldLinks.add(startLoc.getName()+endLoc.getName()+weight);
+        oldLinks.add(startLoc.getName()+","+endLoc.getName()+","+weight);
         try {
             File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "newlinks.txt");
+            if(!file.exists()){
+                file.createNewFile();
+            }
             BufferedWriter outputStream = new BufferedWriter(new FileWriter(file));
             for(String line:oldLinks){
                 outputStream.write(line);
@@ -70,7 +74,7 @@ public class Model implements IModel {
             }
             outputStream.close();
         }catch (IOException e){
-
+            Log.d("Just need a line","blah blah blah");
         }
     }
 

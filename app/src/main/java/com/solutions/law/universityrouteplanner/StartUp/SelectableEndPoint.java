@@ -71,6 +71,6 @@ public class SelectableEndPoint implements Selectable,EndPoint {
     }
 
     public void draw(GoogleMap gMap,int colour){
-        gMap.addPolygon(new PolygonOptions().addAll(coOrds).strokeColor(colour).fillColor(Color.BLUE));
+        gMap.addPolygon(new PolygonOptions().addAll(coOrds).strokeColor(colour).fillColor(Color.BLUE).clickable(true));
     }
 }

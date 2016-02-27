@@ -135,6 +135,7 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
         NodeThing centre=null;
         List<NodeThing> others = new ArrayList<>();
         gMap.clear();
+        gMap.setOnPolygonClickListener(controller);
         if(plane.equals("Outside")){
             gMap.setBuildingsEnabled(false);
             gMap.setIndoorEnabled(false);
