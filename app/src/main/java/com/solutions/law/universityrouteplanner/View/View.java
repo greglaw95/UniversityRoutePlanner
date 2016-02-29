@@ -74,11 +74,10 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
                 controller.select();
             }
         });
-        clearButton.setOnTouchListener(new android.view.View.OnTouchListener() {
+        clearButton.setOnClickListener(new android.view.View.OnClickListener() {
             @Override
-            public boolean onTouch(android.view.View v, MotionEvent event) {
+            public void onClick(android.view.View v) {
                 controller.clear();
-                return false;
             }
         });
     }
@@ -89,6 +88,7 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
         gMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         gMap.setBuildingsEnabled(true);
         LatLng centre = new LatLng(55.861903,-4.244082);
+        gMap.setOnMarkerClickListener(controller);
         gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(centre,16));
         gMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
@@ -100,9 +100,8 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
 
     @Override
     public void update(RoutePlannerState state) {
-        plane.getText().clear();
-        plane.getText().append(state.getPlane());
-        room.setText(state.getNewPoint().getRoom());
+        plane.setText(state.getPlane().toCharArray(),0,state.getPlane().length());
+        room.setText(state.getRoom().toCharArray(),0,state.getRoom().length());
         gMap.clear();
         for(Midpoint point:state.getPoints()) {
             gMap.addMarker(new MarkerOptions().position(point.getPoint()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).title(point.getRoom()));

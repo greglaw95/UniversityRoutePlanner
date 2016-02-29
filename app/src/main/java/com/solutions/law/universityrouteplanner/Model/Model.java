@@ -51,11 +51,14 @@ public class Model implements IModel {
     }
 
     @Override
-    public void selectedPoint(String name){
-        oldPoints.add(currentPoint);
+    public void selectedPoint(String name,LatLng point){
+        if(!currentPoint.getRoom().equals("Default")){
+            oldPoints.add(currentPoint);
+        }
         for(Midpoint current:oldPoints){
-            if(current.getRoom().equals(name)){
+            if(current.getRoom().equals(name)&&current.getPoint().equals(point)){
                 currentPoint=current;
+                break;
             }
         }
         oldPoints.remove(currentPoint);
@@ -72,7 +75,7 @@ public class Model implements IModel {
         if(currentPoint==null){
             return;
         }
-        if(!currentPoint.getRoom().equals("Default")) {
+        if(!currentPoint.getRoom().equals("Default")&&!oldPoints.contains(currentPoint)) {
             oldPoints.add(currentPoint);
         }
         currentPoint=new Midpoint("Default","Default",new LatLng(24,24));
@@ -84,7 +87,6 @@ public class Model implements IModel {
                 outputStream.newLine();
             }
             outputStream.close();
-            clear();
             alertAll();
         }catch(IOException e){
             String newString=e.getMessage();
@@ -100,14 +102,12 @@ public class Model implements IModel {
     public void currentRoom(String room){
         if(!room.equals(currentPoint.getRoom())) {
             currentPoint.setRoom(room);
-            alertAll();
         }
     }
 
     public void currentPlane(String plane){
         if(!plane.equals(currentPoint.getPlane())) {
             currentPoint.setPlane(plane);
-            alertAll();
         }
     }
 
@@ -117,7 +117,7 @@ public class Model implements IModel {
 
     private void alertAll(){
         for(RoutePlannerListener listener:listeners){
-            listener.update(new RoutePlannerState(currentPoint.getPlane(),currentPoint.getRoom(),oldPoints,currentPoint));
+            listener.update(new RoutePlannerState(currentPoint.getRoom(),currentPoint.getPlane(),oldPoints,currentPoint));
         }
     }
 

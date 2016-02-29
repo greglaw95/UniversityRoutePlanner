@@ -19,13 +19,13 @@ public class Controller implements IController {
     }
 
     @Override
-    public void setRoom(CharSequence room){
-        model.currentRoom(room.toString());
+    public void setRoom(String room){
+        model.currentRoom(room);
     }
 
     @Override
-    public void setPlane(CharSequence newPlane) {
-        model.currentPlane(newPlane.toString());
+    public void setPlane(String newPlane) {
+        model.currentPlane(newPlane);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class Controller implements IController {
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        model.selectedPoint(marker.getTitle());
+        model.selectedPoint(marker.getTitle(),marker.getPosition());
         return true;
     }
 
