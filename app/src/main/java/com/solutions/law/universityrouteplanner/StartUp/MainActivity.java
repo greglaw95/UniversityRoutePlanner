@@ -63,8 +63,12 @@ public class MainActivity extends FragmentActivity{
 
     private void addOutsideLinks(){
         for (int i = 0; i < steppingStones.size() - 1; i++) {
-            for (int j = i + 1; j < steppingStones.size(); j++) {
-                links.add(approximateDuration(steppingStones.get(i),steppingStones.get(j)));
+            if(steppingStones.get(i).getPlane().equals("Outside")) {
+                for (int j = i + 1; j < steppingStones.size(); j++) {
+                    if(steppingStones.get(j).getPlane().equals("Outside")) {
+                        links.add(approximateDuration(steppingStones.get(i), steppingStones.get(j)));
+                    }
+                }
             }
         }
     }
