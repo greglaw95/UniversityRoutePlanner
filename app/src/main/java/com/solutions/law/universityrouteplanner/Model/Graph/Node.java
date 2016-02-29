@@ -10,9 +10,11 @@ import java.util.List;
  */
 public class Node implements INode {
     String name;
+    Boolean passThrough;
     List<IEdge> edges;
 
-    public Node(String name){
+    public Node(String name,Boolean passThrough){
+        this.passThrough=passThrough;
         this.name=name;
         edges=new ArrayList<>();
     }
@@ -29,5 +31,10 @@ public class Node implements INode {
     @Override
     public List<IEdge> getIEdges(){
         return edges;
+    }
+
+    @Override
+    public boolean canPassThrough(){
+        return passThrough;
     }
 }

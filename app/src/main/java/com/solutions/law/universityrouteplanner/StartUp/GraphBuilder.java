@@ -20,10 +20,10 @@ public class GraphBuilder {
         Node nodeOne=null;
         Node nodeTwo=null;
         for(EndPoint ep:endPoints){
-            nodes.add(new Node(ep.getName()));
+            nodes.add(new Node(ep.getName(),false));
         }
         for(SteppingStone ss:steppingStones){
-            nodes.add(new Node(ss.getName()));
+            nodes.add(new Node(ss.getName(),true));
         }
         for (Link link:links){
             for (Node current:nodes){

@@ -82,7 +82,10 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
         gMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        gMap.setBuildingsEnabled(false);
+        gMap.setBuildingsEnabled(true);
+        gMap.setIndoorEnabled(false);
+        LatLng centre = new LatLng(55.861903,-4.244082);
+        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(centre,16));
         gMap.setOnIndoorStateChangeListener(new GoogleMap.OnIndoorStateChangeListener() {
             @Override
             public void onIndoorBuildingFocused() {
@@ -94,6 +97,7 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
                 controller.setLevel(indoorBuilding.getLevels().size() - indoorBuilding.getActiveLevelIndex());
             }
         });
+        gMap.setOnMarkerClickListener(controller);
         gMap.setOnPolygonClickListener(controller);
         gMap.setOnCameraChangeListener(controller);
         controller.startUp();
@@ -142,20 +146,18 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
         List<MidPoint> routeDisplay;
         gMap.clear();
         if(state.getPlane().equals("Outside")){
-            gMap.setBuildingsEnabled(false);
             gMap.setIndoorEnabled(false);
             gMap.getUiSettings().setIndoorLevelPickerEnabled(false);
         }else{
-            gMap.setBuildingsEnabled(true);
             gMap.setIndoorEnabled(true);
             gMap.getUiSettings().setIndoorLevelPickerEnabled(true);
         }
         for (EndPoint current : endPoints) {
             if(current.getPlane().equals(state.getPlane())) {
                 if ((start != null && current.getName().equals(start)) || (end != null && current.getName().equals(end))) {
-                    gMap.addPolygon(new PolygonOptions().addAll(current.getCoOrds()).strokeColor(Color.RED).fillColor(Color.MAGENTA).geodesic(true).clickable(true));
+                    gMap.addPolygon(new PolygonOptions().addAll(current.getCoOrds()).strokeColor(Color.RED).geodesic(true).clickable(true));
                 } else {
-                    gMap.addPolygon(new PolygonOptions().addAll(current.getCoOrds()).strokeColor(Color.BLUE).fillColor(Color.CYAN).geodesic(true).clickable(true));
+                    gMap.addPolygon(new PolygonOptions().addAll(current.getCoOrds()).strokeColor(Color.BLUE).geodesic(true).clickable(true));
                 }
             }
         }
@@ -176,21 +178,25 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
                 if(routeDisplay.get(i-1).getPlane().equals(state.getPlane())&&routeDisplay.get(i).getPlane().equals(state.getPlane())) {
                     drawLine(routeDisplay.get(i - 1), routeDisplay.get(i));
                 }else if(routeDisplay.get(i-1).getPlane().equals(state.getPlane())){
-                    //TODO add marker to let user move to routeDisplay(i) plane maybe make it green
+                    gMap.addMarker(new MarkerOptions().position(routeDisplay.get(i-1).getCoOrd()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).title(routeDisplay.get(i).getPlane()));
                 }else if(routeDisplay.get(i).getPlane().equals(state.getPlane())){
-                    //TODO add marker to let user move to routeDisplay(i-1) plane maybe make it red
+                    gMap.addMarker(new MarkerOptions().position(routeDisplay.get(i-1).getCoOrd()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).title(routeDisplay.get(i-1).getPlane()));
                 }
             }
         }
     }
 
     private void drawLine(MidPoint one, MidPoint two) {
-        OutdoorDirectionsFinder odf = new OutdoorDirectionsFinder(one, two);
-        odf.execute();
-        while (!odf.isDone()) ;
-        List<LatLng[]> route = odf.getRoute();
-        for (int i = 0; i < route.size(); i++) {
-            gMap.addPolyline(new PolylineOptions().add(route.get(i)[0], route.get(i)[1]).width(5).color(Color.RED));
+        if(one.getPlane().equals("Outside")&&two.getPlane().equals(one.getPlane())) {
+            OutdoorDirectionsFinder odf = new OutdoorDirectionsFinder(one, two);
+            odf.execute();
+            while (!odf.isDone()) ;
+            List<LatLng[]> route = odf.getRoute();
+            for (int i = 0; i < route.size(); i++) {
+                gMap.addPolyline(new PolylineOptions().add(route.get(i)[0], route.get(i)[1]).width(5).color(Color.RED));
+            }
+        }else{
+            gMap.addPolyline(new PolylineOptions().add(one.getCoOrd(),two.getCoOrd()).width(5).color(Color.RED));
         }
     }
 

@@ -36,12 +36,14 @@ public class DijkstrasAlgorithm implements PathFindingAlgorithm {
         toExamine=start;
         while(toExamine!=end){
             notDealtWith.remove(toExamine);
-            for(IEdge edge:toExamine.getIEdges()){
-                other=edge.getOtherINode();
-                possibleNewDistance=currentDistanceTo.get(toExamine)+edge.getWeight();
-                if(currentDistanceTo.get(other)>possibleNewDistance){
-                    currentDistanceTo.put(other,possibleNewDistance);
-                    predecessor.put(other,toExamine);
+            if(toExamine.canPassThrough()||toExamine.equals(start)) {
+                for (IEdge edge : toExamine.getIEdges()) {
+                    other = edge.getOtherINode();
+                    possibleNewDistance = currentDistanceTo.get(toExamine) + edge.getWeight();
+                    if (currentDistanceTo.get(other) > possibleNewDistance) {
+                        currentDistanceTo.put(other, possibleNewDistance);
+                        predecessor.put(other, toExamine);
+                    }
                 }
             }
             toExamine=closestUnexaminedINode(currentDistanceTo, notDealtWith);

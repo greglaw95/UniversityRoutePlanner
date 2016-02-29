@@ -2,6 +2,7 @@ package com.solutions.law.universityrouteplanner.Controller;
 
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polygon;
 import com.solutions.law.universityrouteplanner.Model.IModel;
 
@@ -76,6 +77,12 @@ public class Controller implements IController {
                 return;
             }
         }
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        model.setPlane(marker.getTitle());
+        return true;
     }
 
     @Override
