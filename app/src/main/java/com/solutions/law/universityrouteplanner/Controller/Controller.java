@@ -54,7 +54,12 @@ public class Controller implements IController {
 
     @Override
     public void weight(String weight){
-        model.setWeight(Double.parseDouble(weight));
+        try{
+            model.setWeight(Double.parseDouble(weight));
+        }catch(Exception e){
+
+        }
+
     }
 
     @Override
