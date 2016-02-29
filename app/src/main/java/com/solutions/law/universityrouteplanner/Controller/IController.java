@@ -6,7 +6,7 @@ import com.google.android.gms.maps.model.LatLng;
 /**
  * Created by kbb12 on 10/02/2016.
  */
-public interface IController  {
+public interface IController extends GoogleMap.OnMarkerClickListener  {
     public void setPlane(CharSequence newPlane);
     public void setRoom(CharSequence newRoom);
     public void select();

@@ -23,11 +23,9 @@ import java.util.List;
  */
 public class Model implements IModel {
 
-    private String plane;
-    private String room;
     private List<RoutePlannerListener> listeners;
     private List<Midpoint> oldPoints;
-    private Midpoint newPoint;
+    private Midpoint currentPoint;
 
 
     public Model(){
@@ -49,20 +47,35 @@ public class Model implements IModel {
         }catch(IOException e){
 
         }
+        currentPoint=new Midpoint("Default","Default",new LatLng(24,24));
+    }
+
+    @Override
+    public void selectedPoint(String name){
+        oldPoints.add(currentPoint);
+        for(Midpoint current:oldPoints){
+            if(current.getRoom().equals(name)){
+                currentPoint=current;
+            }
+        }
+        oldPoints.remove(currentPoint);
+        alertAll();
     }
 
     public void addPoint(LatLng newLoc){
-        newPoint= new Midpoint(room,plane,newLoc);
+        currentPoint.setPoint(newLoc);
         alertAll();
     }
 
 
     public void select(){
-        if(newPoint==null){
+        if(currentPoint==null){
             return;
         }
-        oldPoints.add(newPoint.copy());
-        newPoint=null;
+        if(!currentPoint.getRoom().equals("Default")) {
+            oldPoints.add(currentPoint);
+        }
+        currentPoint=new Midpoint("Default","Default",new LatLng(24,24));
         try {
             File file =new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),"newMidpoints.txt");
             BufferedWriter outputStream = new BufferedWriter(new FileWriter(file));
@@ -79,16 +92,23 @@ public class Model implements IModel {
     }
 
     public void clear(){
-        newPoint=null;
+        currentPoint=new Midpoint("Default","Default",new LatLng(24,24));
+        select();
         alertAll();
     }
 
     public void currentRoom(String room){
-        this.room=room;
+        if(!room.equals(currentPoint.getRoom())) {
+            currentPoint.setRoom(room);
+            alertAll();
+        }
     }
 
     public void currentPlane(String plane){
-        this.plane=plane;
+        if(!plane.equals(currentPoint.getPlane())) {
+            currentPoint.setPlane(plane);
+            alertAll();
+        }
     }
 
     public void addListener(RoutePlannerListener listener){
@@ -97,7 +117,7 @@ public class Model implements IModel {
 
     private void alertAll(){
         for(RoutePlannerListener listener:listeners){
-            listener.update(new RoutePlannerState(plane,room,oldPoints,newPoint));
+            listener.update(new RoutePlannerState(currentPoint.getPlane(),currentPoint.getRoom(),oldPoints,currentPoint));
         }
     }
 

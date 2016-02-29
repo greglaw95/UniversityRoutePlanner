@@ -29,9 +29,13 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
 
     private final IController controller;
     private GoogleMap gMap;
+    private EditText plane;
+    private EditText room;
 
     public View(IController control, EditText plane, EditText room, final Button selectButton,Button clearButton) {
         this.controller = control;
+        this.plane=plane;
+        this.room=room;
         plane.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -96,11 +100,14 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
 
     @Override
     public void update(RoutePlannerState state) {
+        plane.getText().clear();
+        plane.getText().append(state.getPlane());
+        room.setText(state.getNewPoint().getRoom());
         gMap.clear();
         for(Midpoint point:state.getPoints()) {
-            gMap.addMarker(new MarkerOptions().position(point.getPoint()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+            gMap.addMarker(new MarkerOptions().position(point.getPoint()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).title(point.getRoom()));
         }
-        if(state.getNewPoint()!=null){
+        if(!state.getPoints().contains(state.getNewPoint())){
             gMap.addMarker(new MarkerOptions().position(state.getNewPoint().getPoint()));
         }
     }

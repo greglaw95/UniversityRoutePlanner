@@ -13,5 +13,6 @@ public interface IModel {
     public void currentRoom(String item);
     public void select();
     public void clear();
+    public void selectedPoint(String title);
     public void addPoint(LatLng newPoint);
 }

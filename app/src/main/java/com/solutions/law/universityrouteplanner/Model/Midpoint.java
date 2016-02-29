@@ -28,6 +28,18 @@ public class Midpoint {
         return room;
     }
 
+    public void setRoom(String room) {
+        this.room = room;
+    }
+
+    public void setPlane(String plane) {
+        this.plane = plane;
+    }
+
+    public void setPoint(LatLng point) {
+        this.point = point;
+    }
+
     public Midpoint copy(){
         return new Midpoint(room,plane,new LatLng(point.latitude,point.longitude));
     }
