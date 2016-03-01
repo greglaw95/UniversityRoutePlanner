@@ -30,7 +30,6 @@ import java.util.Map;
 public class View implements OnMapReadyCallback, RoutePlannerListener {
 
     private final IController controller;
-    private List<EndPoint> endPoints;
     private List<MidPoint> midPoints;
     private Map<String,List<EndPoint>> endPointByPlane;
     private GoogleMap gMap;
@@ -41,7 +40,6 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
     private FragmentManager supportFragmentManager;
 
     public View(IController control, List<EndPoint> endPoints, List<MidPoint> midPoints, EditText startPoint, EditText endPoint, Button directionsButton,Button inOutButton,FragmentManager fragmentManager) {
-        this.endPoints = endPoints;
         this.midPoints = midPoints;
         this.controller = control;
         this.startPoint = startPoint;
@@ -122,15 +120,7 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
 
     @Override
     public void update(RoutePlannerState state) {
-        if (prevState == null) {
-            /*
-            updateText(startPoint, state.getStartLoc());
-            updateText(endPoint, state.getEndLoc());
-            updateMap(state.getPosition(), state.getPlane(), state.getLevel());
-            updateMapAdditions(state.getStartLoc(), state.getEndLoc(),state.getRouteSelected(),state.getPlane());
-            updateError(state.getError());
-            */
-        } else {
+        if (prevState!=null) {
             Boolean startDifferent=(prevState.getStartLoc()==null||!prevState.getStartLoc().equals(state.getStartLoc()));
             Boolean endDifferent=(prevState.getEndLoc()==null||!prevState.getEndLoc().equals(state.getEndLoc()));
             Boolean newRoute=prevState.getRouteSelected()==null || !prevState.getRouteSelected().equals(state.getRouteSelected());
