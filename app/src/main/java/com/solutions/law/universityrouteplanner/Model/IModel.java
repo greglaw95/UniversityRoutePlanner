@@ -13,7 +13,7 @@ public interface IModel {
     public void endLoc(String item);
     public void newRoute();
     public void setError(String error);
-    public void setPlane(String plane);
+    public void setPlane(String plane,String level);
     public String getStart();
     public String getEnd();
     public void setPosition(CameraPosition position);

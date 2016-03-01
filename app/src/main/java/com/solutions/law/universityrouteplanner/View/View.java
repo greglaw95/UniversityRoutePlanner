@@ -1,11 +1,7 @@
 package com.solutions.law.universityrouteplanner.View;
 
 import android.app.FragmentManager;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,6 +10,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.IndoorBuilding;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -23,7 +20,9 @@ import com.solutions.law.universityrouteplanner.Controller.IController;
 import com.solutions.law.universityrouteplanner.Model.Update.RoutePlannerState;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by kbb12155 on 10/02/16.
@@ -33,6 +32,7 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
     private final IController controller;
     private List<EndPoint> endPoints;
     private List<MidPoint> midPoints;
+    private Map<String,List<EndPoint>> endPointByPlane;
     private GoogleMap gMap;
     private EditText startPoint;
     private EditText endPoint;
@@ -76,6 +76,18 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
             }
         });
         prevState = null;
+        setUpEndpointByPlane(endPoints);
+    }
+
+
+    private void setUpEndpointByPlane(List<EndPoint> endPoints){
+        endPointByPlane= new HashMap<>();
+        for(EndPoint current:endPoints){
+            if(!endPointByPlane.containsKey(current.getPlane())){
+                endPointByPlane.put(current.getPlane(),new ArrayList<EndPoint>());
+            }
+            endPointByPlane.get(current.getPlane()).add(current);
+        }
     }
 
     @Override
@@ -85,16 +97,21 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
         gMap.setBuildingsEnabled(true);
         gMap.setIndoorEnabled(false);
         LatLng centre = new LatLng(55.861903,-4.244082);
-        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(centre,16));
+        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(centre, 16));
         gMap.setOnIndoorStateChangeListener(new GoogleMap.OnIndoorStateChangeListener() {
             @Override
             public void onIndoorBuildingFocused() {
-                Log.d("Just need a", "breakpoint");
+                try {
+                    gMap.getFocusedBuilding().getLevels().get(gMap.getFocusedBuilding().getLevels().size() - Integer.parseInt(prevState.getLevel())).activate();
+                } catch (Exception e) {
+                    //Wrong building focused but this doesn't matter it will be the right one next time around. It's just google maps panning over other buildings as it moves
+                    //to the selected building.
+                }
             }
 
             @Override
             public void onIndoorLevelActivated(IndoorBuilding indoorBuilding) {
-                controller.setLevel(indoorBuilding.getLevels().size() - indoorBuilding.getActiveLevelIndex());
+                controller.setLevel(Integer.toString(indoorBuilding.getLevels().size() - indoorBuilding.getActiveLevelIndex()));
             }
         });
         gMap.setOnMarkerClickListener(controller);
@@ -105,31 +122,34 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
 
     @Override
     public void update(RoutePlannerState state) {
-        Boolean earlyChange = false;
         if (prevState == null) {
+            /*
             updateText(startPoint, state.getStartLoc());
             updateText(endPoint, state.getEndLoc());
-            if(state.getPosition()!= null){
-                gMap.animateCamera(CameraUpdateFactory.newCameraPosition(state.getPosition()));
-            }
-            updateMap(state.getStartLoc(),state.getEndLoc(),state.getRouteSelected(),state);
+            updateMap(state.getPosition(), state.getPlane(), state.getLevel());
+            updateMapAdditions(state.getStartLoc(), state.getEndLoc(),state.getRouteSelected(),state.getPlane());
             updateError(state.getError());
+            */
         } else {
-            if (prevState.getStartLoc()==null||!prevState.getStartLoc().equals(state.getStartLoc())) {
+            Boolean startDifferent=(prevState.getStartLoc()==null||!prevState.getStartLoc().equals(state.getStartLoc()));
+            Boolean endDifferent=(prevState.getEndLoc()==null||!prevState.getEndLoc().equals(state.getEndLoc()));
+            Boolean newRoute=prevState.getRouteSelected()==null || !prevState.getRouteSelected().equals(state.getRouteSelected());
+            Boolean differentPlane=prevState.getPlane()==null || !prevState.getPlane().equals(state.getPlane());
+            Boolean newPosition=(prevState.getPosition()==null||!prevState.getPosition().equals(state.getPosition()));
+            Boolean newError=prevState.getError()==null||!prevState.getError().equals(state.getError());
+            if (startDifferent) {
                 updateText(startPoint, state.getStartLoc());
-                earlyChange = true;
             }
-            if (prevState.getEndLoc()==null||!prevState.getEndLoc().equals(state.getEndLoc())) {
+            if (endDifferent) {
                 updateText(endPoint, state.getEndLoc());
-                earlyChange = true;
             }
-            if (earlyChange || prevState.getRouteSelected()==null || !prevState.getRouteSelected().equals(state.getRouteSelected()) ||prevState.getPlane()==null||!prevState.getPlane().equals(state.getPlane())) {
-                updateMap(state.getStartLoc(), state.getEndLoc(), state.getRouteSelected(),state);
+            if (startDifferent || endDifferent || newRoute || differentPlane) {
+                updateMapAdditions(state.getStartLoc(), state.getEndLoc(), state.getRouteSelected(),state.getPlane());
             }
-            if((state.getPosition()!=null)&&(prevState.getPosition()==null||!prevState.getPosition().equals(state.getPosition()))){
-                gMap.animateCamera(CameraUpdateFactory.newCameraPosition(state.getPosition()));
+            if((state.getPosition()!=null)&&(newPosition||differentPlane)){
+                updateMap(state.getPosition(),state.getPlane(),state.getLevel());
             }
-            if(prevState.getError()==null||!prevState.getError().equals(state.getError())){
+            if(newError){
                 updateError(state.getError());
             }
         }
@@ -142,18 +162,25 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
         }
     }
 
-    private void updateMap(String start, String end, List<String> routeSelected,RoutePlannerState state) {
-        List<MidPoint> routeDisplay;
-        gMap.clear();
-        if(state.getPlane().equals("Outside")){
+    private void updateMap(CameraPosition position,String plane,String level){
+        if(plane.equals("Outside")){
             gMap.setIndoorEnabled(false);
             gMap.getUiSettings().setIndoorLevelPickerEnabled(false);
         }else{
             gMap.setIndoorEnabled(true);
             gMap.getUiSettings().setIndoorLevelPickerEnabled(true);
         }
-        for (EndPoint current : endPoints) {
-            if(current.getPlane().equals(state.getPlane())) {
+        gMap.animateCamera(CameraUpdateFactory.newCameraPosition(position));
+        if(gMap.getFocusedBuilding()!=null) {
+            gMap.getFocusedBuilding().getLevels().get(gMap.getFocusedBuilding().getLevels().size() - Integer.parseInt(level)).activate();
+        }
+    }
+
+    private void updateMapAdditions(String start, String end, List<String> routeSelected,String plane) {
+        List<MidPoint> routeDisplay;
+        gMap.clear();
+        if(endPointByPlane.get(plane)!=null) {
+            for (EndPoint current : endPointByPlane.get(plane)) {
                 if ((start != null && current.getName().equals(start)) || (end != null && current.getName().equals(end))) {
                     gMap.addPolygon(new PolygonOptions().addAll(current.getCoOrds()).strokeColor(Color.RED).geodesic(true).clickable(true));
                 } else {
@@ -175,12 +202,12 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
         }
         if (routeDisplay.size() > 1) {
             for (int i = 1; i < routeDisplay.size(); i++) {
-                if(routeDisplay.get(i-1).getPlane().equals(state.getPlane())&&routeDisplay.get(i).getPlane().equals(state.getPlane())) {
+                if(routeDisplay.get(i-1).getPlane().equals(plane)&&routeDisplay.get(i).getPlane().equals(plane)) {
                     drawLine(routeDisplay.get(i - 1), routeDisplay.get(i));
-                }else if(routeDisplay.get(i-1).getPlane().equals(state.getPlane())){
+                }else if(routeDisplay.get(i-1).getPlane().equals(plane)){
                     gMap.addMarker(new MarkerOptions().position(routeDisplay.get(i-1).getCoOrd()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).title(routeDisplay.get(i).getPlane()));
-                }else if(routeDisplay.get(i).getPlane().equals(state.getPlane())){
-                    gMap.addMarker(new MarkerOptions().position(routeDisplay.get(i-1).getCoOrd()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).title(routeDisplay.get(i-1).getPlane()));
+                }else if(routeDisplay.get(i).getPlane().equals(plane)){
+                    gMap.addMarker(new MarkerOptions().position(routeDisplay.get(i).getCoOrd()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).title(routeDisplay.get(i-1).getPlane()));
                 }
             }
         }

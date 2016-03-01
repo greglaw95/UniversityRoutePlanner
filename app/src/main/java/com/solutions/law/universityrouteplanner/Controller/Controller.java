@@ -32,22 +32,22 @@ public class Controller implements IController {
     public void goInside() {
         if (currentStructure!=null) {
             currentStructure=null;
-            model.setPlane("Outside");
+            model.setPlane("Outside","");
         }else{
             if(location==Location.START){
                 currentStructure=findStructure(model.getStart());
             }else{
                 currentStructure=findStructure(model.getEnd());
             }
-            model.setPlane(currentStructure.getName() + currentStructure.getLevel());
+            model.setPlane(currentStructure.getName(),currentStructure.getLevel());
         }
         onCameraChange(model.getPosition());
     }
 
     @Override
-    public void setLevel(int level){
+    public void setLevel(String level){
         currentStructure.setLevel(level);
-        model.setPlane(currentStructure.getName()+level);
+        model.setPlane(currentStructure.getName(), currentStructure.getLevel());
     }
 
     @Override
@@ -81,9 +81,32 @@ public class Controller implements IController {
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        model.setPlane(marker.getTitle());
+        String fullPlane = marker.getTitle();
+        int lastChar=findLastChar(fullPlane);
+        if(lastChar<fullPlane.length()-1) {
+            String structure = fullPlane.substring(0,lastChar+1);
+            String level = fullPlane.substring(lastChar + 1);
+            currentStructure=findStructure(structure);
+            currentStructure.setLevel(level);
+            model.setPlane(structure,level);
+        }else{
+            model.setPlane(fullPlane.substring(0, lastChar+1),"");
+            currentStructure=null;
+        }
         return true;
     }
+
+    private int findLastChar(String title){
+        char[] blah = title.toCharArray();
+        int lastCharAt=0;
+        for(int i=0;i<blah.length;i++){
+            if(!Character.isDigit(blah[i])){
+                lastCharAt=i;
+            }
+        }
+        return lastCharAt;
+    }
+
 
     @Override
     public void startUp(){

@@ -22,6 +22,7 @@ public class Model implements IModel {
     private List<String> routeSelected;
     private String error;
     private String plane;
+    private String level;
     CameraPosition position;
 
     public Model(List<INode> graph,PathFindingAlgorithm algorithm){
@@ -32,6 +33,7 @@ public class Model implements IModel {
         endLoc=null;
         error=null;
         plane="Outside";
+        level="";
         position=null;
         algorithm.setUp(graph);
     }
@@ -45,8 +47,10 @@ public class Model implements IModel {
     public String getEnd(){
         return endLoc.getName();
     }
+
     @Override
-    public void setPlane(String plane){
+    public void setPlane(String plane,String level){
+        this.level=level;
         this.plane=plane;
         alertAll();
     }
@@ -123,7 +127,7 @@ public class Model implements IModel {
             endName=endLoc.getName();
         }
         for(RoutePlannerListener listener:listeners){
-            listener.update(new ModelState(startName,endName,routeSelected,error,plane,position));
+            listener.update(new ModelState(startName,endName,routeSelected,error,plane,position,level));
         }
     }
 

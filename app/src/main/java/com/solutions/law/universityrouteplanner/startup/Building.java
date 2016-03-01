@@ -14,20 +14,20 @@ public class Building implements Structure {
     private Double maxLatAllowed;
     private Double minLngAllowed;
     private Double maxLngAllowed;
-    private int level;
+    private String level;
 
 
-    public int getLevel() {
+    public String getLevel() {
         return level;
     }
 
-    public void setLevel(int level) {
+    public void setLevel(String level) {
         this.level = level;
     }
 
     public Building(SelectableEndPoint basis){
         this.name=basis.getName();
-        this.level=1;
+        this.level="1";
 
         this.minLatAllowed=Double.MAX_VALUE;
         this.maxLatAllowed=Double.MAX_VALUE*-1;

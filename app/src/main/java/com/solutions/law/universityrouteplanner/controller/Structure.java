@@ -10,6 +10,6 @@ public interface Structure {
     public double getMaxLatAllowed();
     public double getMinLngAllowed();
     public double getMaxLngAllowed();
-    public int getLevel();
-    public void setLevel(int level);
+    public String getLevel();
+    public void setLevel(String level);
 }
