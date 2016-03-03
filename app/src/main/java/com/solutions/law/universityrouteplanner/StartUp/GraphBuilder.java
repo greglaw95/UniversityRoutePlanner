@@ -42,8 +42,8 @@ public class GraphBuilder {
         }
     }
 
-    public List<INode> getGraph(){
-        List<INode> graph = new ArrayList(nodes);
+    public List<Node> getGraph(){
+        List<Node> graph = new ArrayList(nodes);
         return graph;
     }
 }

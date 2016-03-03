@@ -5,8 +5,10 @@ import android.util.Log;
 
 
 import com.google.android.gms.maps.model.CameraPosition;
+import com.solutions.law.universityrouteplanner.Model.Graph.Edge;
 import com.solutions.law.universityrouteplanner.Model.Graph.IEdge;
 import com.solutions.law.universityrouteplanner.Model.Graph.INode;
+import com.solutions.law.universityrouteplanner.Model.Graph.Node;
 import com.solutions.law.universityrouteplanner.Model.Update.ModelState;
 import com.solutions.law.universityrouteplanner.View.RoutePlannerListener;
 
@@ -25,9 +27,9 @@ import java.util.List;
 public class Model implements IModel {
 
     private List<RoutePlannerListener> listeners;
-    private INode startLoc;
-    private INode endLoc;
-    private List<INode> graph;
+    private Node startLoc;
+    private Node endLoc;
+    private List<Node> graph;
     private List<String> connectedNodes;
     private String error;
     private String plane;
@@ -35,7 +37,7 @@ public class Model implements IModel {
     private List<String> oldLinks;
     private CameraPosition position;
 
-    public Model(List<INode> graph){
+    public Model(List<Node> graph){
         oldLinks= new ArrayList<>();
         this.graph=graph;
         listeners=new ArrayList<>();
@@ -48,11 +50,24 @@ public class Model implements IModel {
         connectedNodes= new ArrayList<>();
         File file =new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),"newLinks.txt");
         String line;
+        Node first=null;
+        Node second=null;
         try {
             if (file.exists()) {
                 BufferedReader input = new BufferedReader(new FileReader(file));
                 line = input.readLine();
                 while (line != null) {
+                    String[] parts=line.split(",");
+                    for(Node current:graph){
+                        if(current.getName().equals(parts[0])){
+                            first=current;
+                        }
+                        if(current.getName().equals(parts[1])){
+                            second=current;
+                        }
+                    }
+                    first.addEdge(new Edge(second,Double.parseDouble(parts[2])));
+                    second.addEdge(new Edge(first,Double.parseDouble(parts[2])));
                     oldLinks.add(line);
                     line = input.readLine();
                 }
@@ -64,6 +79,9 @@ public class Model implements IModel {
 
     @Override
     public void addLink() {
+        startLoc.addEdge(new Edge(endLoc,weight));
+        endLoc.addEdge(new Edge(startLoc,weight));
+        connectedNodes.add(endLoc.getName());
         oldLinks.add(startLoc.getName() + "," + endLoc.getName() + "," + weight);
         try {
             File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "newlinks.txt");
@@ -110,7 +128,7 @@ public class Model implements IModel {
     @Override
     public void startLoc(String start){
         Boolean changed=false;
-        for(INode current:graph){
+        for(Node current:graph){
             if(current.getName().equals(start)){
                 if(!current.equals(startLoc)){
                     changed=true;
@@ -130,7 +148,7 @@ public class Model implements IModel {
     @Override
     public void endLoc(String end){
         Boolean changed=false;
-        for(INode current:graph){
+        for(Node current:graph){
             if(current.getName().equals(end)){
                 if(!current.equals(endLoc)){
                     changed=true;
