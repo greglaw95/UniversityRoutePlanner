@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">UniversityRoutePlanner</string>
+    <string name="title_activity_outdoor">Link Builder</string>
+    <string name="locationOneHint">Start</string>
+    <string name="locationTwoHint">Destination</string>
+    <string name="weightHint">Weight</string>
+    <string name="addButton">Add</string>
+    <string name="inOutButton">In/Out</string>
+</resources>

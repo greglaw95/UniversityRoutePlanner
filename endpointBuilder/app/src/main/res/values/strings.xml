@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">UniversityRoutePlanner</string>
+    <string name="title_activity_outdoor">Map</string>
+    <string name="locationOneHint">Start</string>
+    <string name="locationTwoHint">Destination</string>
+    <string name="selectButton">Select</string>
+    <string name="clearButton">Clear</string>
+    <string name="accept">OK</string>
+</resources>

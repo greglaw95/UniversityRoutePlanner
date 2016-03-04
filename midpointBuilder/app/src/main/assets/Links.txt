@@ -1,0 +1,10 @@
+Royal College,RCEXITONE,0
+Royal College,RCEXITTWO,0
+Royal College,RCEXITTHREE,0
+James Weir,JWEXITONE,0
+Thomas Graham,TGEXITONE,0
+Thomas Graham,TGEXITTWO,0
+Student Union,UEXITONE,0
+Livingstone Tower,LTEXITONE,0
+Livingstone Tower,LTEXITTWO,0
+McCance,MEXITONE,0
