@@ -39,15 +39,21 @@ public class Controller implements IController {
             }else{
                 currentStructure=findStructure(model.getEnd());
             }
-            model.setPlane(currentStructure.getName(),currentStructure.getLevel());
+            if(currentStructure==null){
+                model.setError("You can not move inside the selected area.");
+            }else {
+                model.setPlane(currentStructure.getName(), currentStructure.getLevel());
+            }
         }
         onCameraChange(model.getPosition());
     }
 
     @Override
     public void setLevel(String level){
-        currentStructure.setLevel(level);
-        model.setPlane(currentStructure.getName(), currentStructure.getLevel());
+        if(currentStructure!=null) {
+            currentStructure.setLevel(level);
+            model.setPlane(currentStructure.getName(), currentStructure.getLevel());
+        }
     }
 
     @Override

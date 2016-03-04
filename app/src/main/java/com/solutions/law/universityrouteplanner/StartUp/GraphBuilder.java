@@ -1,5 +1,7 @@
 package com.solutions.law.universityrouteplanner.StartUp;
 
+import android.util.Log;
+
 import com.solutions.law.universityrouteplanner.Model.Graph.Edge;
 import com.solutions.law.universityrouteplanner.Model.Graph.INode;
 import com.solutions.law.universityrouteplanner.Model.Graph.Node;
@@ -26,6 +28,8 @@ public class GraphBuilder {
             nodes.add(new Node(ss.getName(),true));
         }
         for (Link link:links){
+            nodeOne=null;
+            nodeTwo=null;
             for (Node current:nodes){
                 if(current.getName().equals(link.getNodeOne())){
                     nodeOne=current;

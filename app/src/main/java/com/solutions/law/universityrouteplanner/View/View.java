@@ -2,6 +2,7 @@ package com.solutions.law.universityrouteplanner.View;
 
 import android.app.FragmentManager;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.Button;
 import android.widget.EditText;
@@ -109,7 +110,7 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
 
             @Override
             public void onIndoorLevelActivated(IndoorBuilding indoorBuilding) {
-                controller.setLevel(Integer.toString(indoorBuilding.getLevels().size() - indoorBuilding.getActiveLevelIndex()));
+                    controller.setLevel(Integer.toString(indoorBuilding.getLevels().size() - indoorBuilding.getActiveLevelIndex()));
             }
         });
         gMap.setOnMarkerClickListener(controller);
@@ -154,11 +155,11 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
 
     private void updateMap(CameraPosition position,String plane,String level){
         if(plane.equals("Outside")){
-            gMap.setIndoorEnabled(false);
             gMap.getUiSettings().setIndoorLevelPickerEnabled(false);
+            gMap.setIndoorEnabled(false);
         }else{
-            gMap.setIndoorEnabled(true);
             gMap.getUiSettings().setIndoorLevelPickerEnabled(true);
+            gMap.setIndoorEnabled(true);
         }
         gMap.animateCamera(CameraUpdateFactory.newCameraPosition(position));
         if(gMap.getFocusedBuilding()!=null) {

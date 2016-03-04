@@ -3,6 +3,7 @@ package com.solutions.law.universityrouteplanner.StartUp;
 import android.support.v4.app.FragmentActivity;
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -10,6 +11,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.solutions.law.universityrouteplanner.Controller.Controller;
 import com.solutions.law.universityrouteplanner.Controller.Selectable;
 import com.solutions.law.universityrouteplanner.Controller.Structure;
+import com.solutions.law.universityrouteplanner.Model.Graph.INode;
+import com.solutions.law.universityrouteplanner.Model.Graph.Node;
 import com.solutions.law.universityrouteplanner.Model.Model;
 import com.solutions.law.universityrouteplanner.Model.PathFinding.DijkstrasAlgorithm;
 import com.solutions.law.universityrouteplanner.R;
@@ -33,6 +36,11 @@ public class MainActivity extends FragmentActivity{
         setContentView(R.layout.activity_outdoor);
         load();
         addOutsideLinks();
+        for(Link link:links){
+            if(link.getNodeOne().equals("LT1107ENTRY1")||link.getNodeTwo().equals("LT1107ENTRY1")){
+                Log.d("","");
+            }
+        }
         GraphBuilder gb = new GraphBuilder(endPoints,steppingStones,links);
         Model model = new Model(gb.getGraph(),new DijkstrasAlgorithm());
         List<Structure> structures=new ArrayList<>();
