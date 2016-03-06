@@ -4,6 +4,7 @@ import android.support.v4.app.FragmentActivity;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -44,11 +45,11 @@ public class MainActivity extends FragmentActivity{
             }
         }
         Controller controller = new Controller(model,new ArrayList<Selectable>(endPoints),structures);
-        EditText textOne =(EditText) findViewById(R.id.locationOne);
-        EditText textTwo =(EditText) findViewById(R.id.locationTwo);
+        AutoCompleteTextView textOne =(AutoCompleteTextView) findViewById(R.id.locationOne);
+        AutoCompleteTextView textTwo =(AutoCompleteTextView) findViewById(R.id.locationTwo);
         Button directionsButton = (Button) findViewById(R.id.directionsButton);
         Button inOutButton = (Button) findViewById(R.id.inOutButton);
-        View view = new View(controller,new ArrayList<EndPoint>(endPoints),new ArrayList<MidPoint>(steppingStones),textOne,textTwo,directionsButton,inOutButton,getFragmentManager());
+        View view = new View(controller,new ArrayList<EndPoint>(endPoints),new ArrayList<MidPoint>(steppingStones),textOne,textTwo,directionsButton,inOutButton,getFragmentManager(),this);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);

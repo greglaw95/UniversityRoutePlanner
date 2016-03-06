@@ -21,4 +21,8 @@ public interface IController extends GoogleMap.OnPolygonClickListener,GoogleMap.
     public void goInside();
 
     public void startUp();
+
+    public void setStart(String newStart);
+
+    public void setEnd(String newEnd);
 }

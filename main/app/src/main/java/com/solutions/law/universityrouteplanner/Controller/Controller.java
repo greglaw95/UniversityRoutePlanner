@@ -167,4 +167,16 @@ public class Controller implements IController {
         }
         return null;
     }
+
+    public void setStart(String start){
+        if(!start.equals(model.getStart())){
+            model.startLoc(start);
+        }
+    }
+
+    public void setEnd(String end){
+        if(!end.equals(model.getEnd())){
+            model.endLoc(end);
+        }
+    }
 }

@@ -1,8 +1,13 @@
 package com.solutions.law.universityrouteplanner.View;
 
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.graphics.Color;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MotionEvent;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -33,13 +38,13 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
     private List<MidPoint> midPoints;
     private Map<String,List<EndPoint>> endPointByPlane;
     private GoogleMap gMap;
-    private EditText startPoint;
-    private EditText endPoint;
+    private AutoCompleteTextView startPoint;
+    private AutoCompleteTextView endPoint;
     private RoutePlannerState prevState;
     private ErrorMessageDialogFragment errorReporter;
     private FragmentManager supportFragmentManager;
 
-    public View(IController control, List<EndPoint> endPoints, List<MidPoint> midPoints, EditText startPoint, EditText endPoint, Button directionsButton,Button inOutButton,FragmentManager fragmentManager) {
+    public View(IController control, List<EndPoint> endPoints, List<MidPoint> midPoints, AutoCompleteTextView startPoint, AutoCompleteTextView endPoint, Button directionsButton,Button inOutButton,FragmentManager fragmentManager,Activity context) {
         this.midPoints = midPoints;
         this.controller = control;
         this.startPoint = startPoint;
@@ -47,11 +52,51 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
         this.supportFragmentManager=fragmentManager;
         errorReporter=new ErrorMessageDialogFragment();
         errorReporter.setController(controller);
+        String[] options = new String[endPoints.size()];
+        for(int i=0;i<endPoints.size();i++){
+            options[i]=endPoints.get(i).getName();
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,
+                android.R.layout.simple_dropdown_item_1line, options);
+        this.startPoint.setAdapter(adapter);
+        this.endPoint.setAdapter(adapter);
+        this.startPoint.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                controller.setStart(s.toString());
+            }
+        });
         this.startPoint.setOnTouchListener(new android.view.View.OnTouchListener() {
             @Override
             public boolean onTouch(android.view.View v, MotionEvent event) {
                 controller.focusOn(IController.Location.START);
                 return false;
+            }
+        });
+        this.endPoint.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                controller.setEnd(s.toString());
             }
         });
         this.endPoint.setOnTouchListener(new android.view.View.OnTouchListener() {

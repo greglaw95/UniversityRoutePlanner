@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="6dp">
-    <EditText android:id="@+id/locationOne"
+    <AutoCompleteTextView android:id="@+id/locationOne"
         android:layout_gravity="top"
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:hint="@string/locationOneHint"
         />
-    <EditText android:id="@+id/locationTwo"
+    <AutoCompleteTextView android:id="@+id/locationTwo"
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="0dp"

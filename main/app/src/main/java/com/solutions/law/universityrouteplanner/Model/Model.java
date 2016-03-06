@@ -40,12 +40,18 @@ public class Model implements IModel {
 
     @Override
     public String getStart(){
-        return startLoc.getName();
+        if(startLoc!=null) {
+            return startLoc.getName();
+        }
+        return null;
     }
 
     @Override
     public String getEnd(){
-        return endLoc.getName();
+        if(endLoc!=null) {
+            return endLoc.getName();
+        }
+        return null;
     }
 
     @Override
