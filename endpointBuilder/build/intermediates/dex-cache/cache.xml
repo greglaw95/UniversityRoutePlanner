@@ -1,3 +1,208 @@
 <?xml version="1.0" encoding="utf-8"?>
-<items version="2" />
+<items version="2" >
 
+    <item
+        jar="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-plus\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="1a78298e7724d5440d210bcb946b3493250d354d">
+        <dex dex="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-plus-8.4.0_957e3225a65a6df9d5020d71f5cc56de784b0e49.jar" />
+    </item>
+    <item
+        jar="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-drive\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="b36f30ac5ee5d5214f4b1e2ac49f11889d58e71a">
+        <dex dex="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-drive-8.4.0_15c3e7eafb9258790014cb446b80978b990852e4.jar" />
+    </item>
+    <item
+        jar="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-fitness\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="c54246475c1bb64ac6857d1320364bfbfeda2c46">
+        <dex dex="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-fitness-8.4.0_978865248536620708250d854344923c82ae44a7.jar" />
+    </item>
+    <item
+        jar="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-cast\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="551e78f21acf69ebfb489c0e79647824c838013e">
+        <dex dex="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-cast-8.4.0_ae905535d546a784476e9a33bb3a01e8710e2f19.jar" />
+    </item>
+    <item
+        jar="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-wallet\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="f2df436a8f02ce7e4d7d209671fc45f97c470f0e">
+        <dex dex="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-wallet-8.4.0_5d676dca7c0ba84312e8b54f971372f51d07add5.jar" />
+    </item>
+    <item
+        jar="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\exploded-aar\com.android.support\mediarouter-v7\23.0.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="d358b3dd49a7c67844622dcbc9cf4339e13952ce">
+        <dex dex="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\pre-dexed\debug\com.android.support-mediarouter-v7-23.0.0_99c1cee45a9b4f6e0a88c7a0ecb1d7a553173ef8.jar" />
+    </item>
+    <item
+        jar="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-panorama\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="08d34b2d135c1cc96ab506fd8bf6916d1e2f391a">
+        <dex dex="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-panorama-8.4.0_595de0ecc533edf930ad4f3c161fed6523b9b195.jar" />
+    </item>
+    <item
+        jar="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.1.1\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="5c5699834e9722f1c288fea2de82725d078ba127">
+        <dex dex="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\pre-dexed\debug\com.android.support-appcompat-v7-23.1.1_a47689eee01ec64fd2388d9408e56767eda832fb.jar" />
+    </item>
+    <item
+        jar="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-appinvite\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="9fe026fb4c7fce21bc5142f6e1bdf844f28061ac">
+        <dex dex="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-appinvite-8.4.0_53dfc66876644b3f5432a9900852456b3d882366.jar" />
+    </item>
+    <item
+        jar="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-gcm\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="2d7fe76982677315c4dc4edfb459c8ca718a9d4c">
+        <dex dex="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-gcm-8.4.0_5328cda0e32c10c1c80e0e03c1fdaa7dda3646ad.jar" />
+    </item>
+    <item
+        jar="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\exploded-aar\com.android.support\mediarouter-v7\23.0.0\jars\libs\internal_impl-23.0.0.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="03d38bb042efe3e5ce27ba66b729a9523c36d8fe">
+        <dex dex="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\pre-dexed\debug\internal_impl-23.0.0_e9ba26eb727d57f4ac7ca1dba3c44b1bc71a362e.jar" />
+    </item>
+    <item
+        jar="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-vision\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="dfecc4d835cdabcdecf7e95f0d20a3ef1e9d8ef4">
+        <dex dex="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-vision-8.4.0_7425edaeac9b4f24c4abb9826dfb03b4e54e21be.jar" />
+    </item>
+    <item
+        jar="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-appindexing\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="65d086ee9daaf87b5af62ad24471edafa433354c">
+        <dex dex="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-appindexing-8.4.0_7c752bf21e32efa7f550452c76feac990c1e5389.jar" />
+    </item>
+    <item
+        jar="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-safetynet\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="0194a7409c40de94fb539d4ad9928ec5d47afeb7">
+        <dex dex="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-safetynet-8.4.0_f2cf96c347be9246e520f370afc2375b66a84821.jar" />
+    </item>
+    <item
+        jar="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-nearby\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="9cad249cf62751a323d9af568caf12284b7d6062">
+        <dex dex="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-nearby-8.4.0_ff3204d6410347ce0171be38a2cccb5d7b3df175.jar" />
+    </item>
+    <item
+        jar="C:\Users\kbb12\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.1.1\support-annotations-23.1.1.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="8d680ba5a623724d1fb0e81c36a790f023a6cede">
+        <dex dex="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\pre-dexed\debug\support-annotations-23.1.1_090d893feffd4b693503d68a942e09cec4b72364.jar" />
+    </item>
+    <item
+        jar="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-maps\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="04de44f90606c77f3b28cf44861f306290505aac">
+        <dex dex="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-maps-8.4.0_18d24f481fa0301eb32a0af4d933450d55536f81.jar" />
+    </item>
+    <item
+        jar="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-games\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="3a364cc6b698d1b3b2d284f64618daaa7fe77ddf">
+        <dex dex="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-games-8.4.0_c55ee8dbd688a37b53f01e51362a5bd57246afdd.jar" />
+    </item>
+    <item
+        jar="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-base\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="fef2b3e4b6b1b0e5fe7b69fa137a5fa55a3182ab">
+        <dex dex="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-base-8.4.0_464d997f073abd6191064a6a91522717ecfd7979.jar" />
+    </item>
+    <item
+        jar="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-auth\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="966e5771a5a2ebfb31bf00d7cd6cd2546d245517">
+        <dex dex="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-auth-8.4.0_d609465edf161df9f1ceee2c6c547aee4701b7c1.jar" />
+    </item>
+    <item
+        jar="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-identity\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="b82b8e847173c28efffcd291b2a0b1ae9ad17fa4">
+        <dex dex="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-identity-8.4.0_b5f641d98449dda20650571cacdacd4f99ae0948.jar" />
+    </item>
+    <item
+        jar="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.1.1\jars\libs\internal_impl-23.1.1.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="a4de9c81ae239414e1ed0f86441b02abaf29bca9">
+        <dex dex="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\pre-dexed\debug\internal_impl-23.1.1_354e67e50ba3ccb871888f860b8499b99cefd6f3.jar" />
+    </item>
+    <item
+        jar="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-wearable\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="e167a34eaca0b31704212f43f9576ea84e05046f">
+        <dex dex="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-wearable-8.4.0_1d28a7e1c062144fc4d564847edc5026125647bd.jar" />
+    </item>
+    <item
+        jar="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-location\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="a8412b654dab86d57bf90683367488211c8a81f1">
+        <dex dex="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-location-8.4.0_bfc5e13e2d1ac6deff96d7d07a2a0caa35d8680d.jar" />
+    </item>
+    <item
+        jar="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-ads\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="b5e7892fb0708e792e0e933c4c0a0ca0ac7831fb">
+        <dex dex="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-ads-8.4.0_f3169babf8b66d35797d1335ccd65249afd19718.jar" />
+    </item>
+    <item
+        jar="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-analytics\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="1c9f35e952b212c843f7bd2c7eec8e82ad95602e">
+        <dex dex="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-analytics-8.4.0_44d8b12513e0d157142caa2d5e418f0f939082ec.jar" />
+    </item>
+    <item
+        jar="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.1.1\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="6cbc7773921fcfedbe55657578f0cbfe614778dc">
+        <dex dex="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\pre-dexed\debug\com.android.support-support-v4-23.1.1_e96586322ac9b6ea0933ef8f4f0a9063e747430c.jar" />
+    </item>
+    <item
+        jar="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-basement\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="8e673cdfadd8f2d98fdb2fda2285c30f6e449782">
+        <dex dex="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-basement-8.4.0_573b192bb7e6c771d55e98170290bd60835a8d21.jar" />
+    </item>
+    <item
+        jar="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-measurement\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="613298b7aa012f121ce542881c0a599ebd8078f2">
+        <dex dex="C:\Users\kbb12\Documents\Uni\Project\UniversityRoutePlanner\endpointBuilder\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-measurement-8.4.0_79385efa6206dc86d8d29652e32b3c8aa542587b.jar" />
+    </item>
+
+</items>
