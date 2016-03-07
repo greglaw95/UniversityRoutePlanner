@@ -100,12 +100,37 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
 
             @Override
             public void onIndoorLevelActivated(IndoorBuilding indoorBuilding) {
-                controller.setLevel(indoorBuilding.getLevels().size()-indoorBuilding.getActiveLevelIndex());
+                controller.setLevel(indoorBuilding.getLevels().size() - indoorBuilding.getActiveLevelIndex());
             }
         });
         gMap.setOnPolygonClickListener(controller);
         gMap.setOnCameraChangeListener(controller);
         controller.startUp();
+    }
+
+    public Double getDifference(String one,String two){
+        NodeThing nodeOne=null;
+        NodeThing nodeTwo=null;
+        for(NodeThing point:points){
+            if(point.getName().equals(one)){
+                nodeOne=point;
+            }else if(point.getName().equals(two)){
+                nodeTwo=point;
+            }
+        }
+        if(nodeOne!=null&&nodeTwo!=null){
+            return approximateDuration(nodeOne,nodeTwo);
+        }else{
+            return 0.0;
+        }
+    }
+
+    private Double approximateDuration(NodeThing one,NodeThing two){
+        Double b=Math.abs(one.getPoint().latitude-two.getPoint().latitude);
+        Double c=Math.abs(one.getPoint().longitude-two.getPoint().longitude);
+        Double a=Math.sqrt(Math.pow(b, 2) + Math.pow(c, 2));
+        Double duration=a*48093.36;
+        return duration;
     }
 
     @Override
@@ -114,6 +139,7 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
         if (prevState == null) {
             updateText(startPoint, state.getStartLoc());
             updateText(endPoint, state.getEndLoc());
+            updateText(weight,Double.toString(state.getWeight()));
             if(state.getPosition()!=null) {
                 gMap.animateCamera(CameraUpdateFactory.newCameraPosition(state.getPosition()));
             }
@@ -125,6 +151,10 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
             }
             if (prevState.getEndLoc()==null||!prevState.getEndLoc().equals(state.getEndLoc())) {
                 updateText(endPoint, state.getEndLoc());
+                earlyChange = true;
+            }
+            if (prevState.getWeight()==null||!prevState.getWeight().equals(state.getWeight())) {
+                updateText(weight, Double.toString(state.getWeight()));
                 earlyChange = true;
             }
             if (earlyChange || prevState.getOtherConnections()==null || !prevState.getOtherConnections().equals(state.getOtherConnections()) ||prevState.getPlane()==null||!prevState.getPlane().equals(state.getPlane())) {

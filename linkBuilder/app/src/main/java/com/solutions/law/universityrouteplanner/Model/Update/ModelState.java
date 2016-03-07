@@ -14,14 +14,21 @@ public class ModelState implements RoutePlannerState {
     private String error;
     private String plane;
     private CameraPosition position;
+    private Double weight;
 
-    public ModelState(String startLoc,String endLoc,List<String> otherConnections,String error,String plane,CameraPosition position){
+    @Override
+    public Double getWeight() {
+        return weight;
+    }
+
+    public ModelState(String startLoc,String endLoc,List<String> otherConnections,String error,String plane,CameraPosition position,Double weight){
         this.startLoc=startLoc;
         this.endLoc=endLoc;
         this.otherConnections =otherConnections;
         this.error=error;
         this.plane=plane;
         this.position=position;
+        this.weight=weight;
     }
 
     public CameraPosition getPosition() {

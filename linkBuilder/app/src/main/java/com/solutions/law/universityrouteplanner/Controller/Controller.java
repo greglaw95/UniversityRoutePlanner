@@ -6,6 +6,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polygon;
 import com.solutions.law.universityrouteplanner.Model.IModel;
 import com.solutions.law.universityrouteplanner.StartUp.SteppingStone;
+import com.solutions.law.universityrouteplanner.View.View;
 
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class Controller implements IController {
     private List<Structure> structures;
     private Location location;
     private Structure building;
+    private View view;
 
     public Controller(IModel model,List<Selectable> elements,List<SteppingStone> stones,List<Structure> structures){
         this.model=model;
@@ -29,6 +31,10 @@ public class Controller implements IController {
         this.structures = structures;
         location=Location.START;
         building=null;
+    }
+
+    public void setView(View view){
+        this.view=view;
     }
 
     public void setLevel(int level){
@@ -55,7 +61,10 @@ public class Controller implements IController {
     @Override
     public void weight(String weight){
         try{
-            model.setWeight(Double.parseDouble(weight));
+            Double newWeight=Double.parseDouble(weight);
+            if(!newWeight.equals(model.getWeight())) {
+                model.setWeight(newWeight);
+            }
         }catch(Exception e){
 
         }
@@ -79,6 +88,7 @@ public class Controller implements IController {
                 return;
             }
         }
+        model.setWeight(view.getDifference(model.getStart(),model.getEnd()));
     }
 
     @Override
@@ -90,9 +100,11 @@ public class Controller implements IController {
                 }else{
                     model.endLoc(element.getName());
                 }
+                model.setWeight(view.getDifference(model.getStart(),model.getEnd()));
                 return true;
             }
         }
+        model.setWeight(view.getDifference(model.getStart(),model.getEnd()));
         return true;
     }
 

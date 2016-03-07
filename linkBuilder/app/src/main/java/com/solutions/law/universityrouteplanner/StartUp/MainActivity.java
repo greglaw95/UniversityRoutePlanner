@@ -49,6 +49,7 @@ public class MainActivity extends FragmentActivity{
         nodes.addAll(endPoints);
         nodes.addAll(steppingStones);
         View view = new View(controller,nodes,textOne,textTwo,textThree,addButton,inOutButton);
+        controller.setView(view);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);

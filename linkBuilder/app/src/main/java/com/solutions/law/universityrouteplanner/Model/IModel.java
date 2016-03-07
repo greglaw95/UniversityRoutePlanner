@@ -18,4 +18,5 @@ public interface IModel {
     public String getEnd();
     public void setPosition(CameraPosition position);
     public CameraPosition getPosition();
+    public Double getWeight();
 }

@@ -13,4 +13,5 @@ public interface RoutePlannerState {
     public List<String> getOtherConnections();
     public String getPlane();
     public CameraPosition getPosition();
+    public Double getWeight();
 }

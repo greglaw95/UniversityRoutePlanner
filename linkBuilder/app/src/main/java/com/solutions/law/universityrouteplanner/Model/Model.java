@@ -44,7 +44,7 @@ public class Model implements IModel {
         startLoc=null;
         endLoc=null;
         error=null;
-        weight=null;
+        weight=0.0;
         position=null;
         plane="Outside";
         connectedNodes= new ArrayList<>();
@@ -78,6 +78,11 @@ public class Model implements IModel {
     }
 
     @Override
+    public Double getWeight(){
+        return weight;
+    }
+
+    @Override
     public void addLink() {
         startLoc.addEdge(new Edge(endLoc,weight));
         endLoc.addEdge(new Edge(startLoc,weight));
@@ -107,12 +112,20 @@ public class Model implements IModel {
 
     @Override
     public String getStart(){
-        return startLoc.getName();
+        if(startLoc!=null) {
+            return startLoc.getName();
+        }else{
+            return null;
+        }
     }
 
     @Override
     public String getEnd(){
-        return endLoc.getName();
+        if(endLoc!=null) {
+            return endLoc.getName();
+        }else{
+            return null;
+        }
     }
     @Override
     public void setPlane(String plane){
@@ -181,7 +194,7 @@ public class Model implements IModel {
             endName=endLoc.getName();
         }
         for(RoutePlannerListener listener:listeners){
-            listener.update(new ModelState(startName,endName,connectedNodes,error,plane,position));
+            listener.update(new ModelState(startName,endName,connectedNodes,error,plane,position,weight));
         }
     }
 
@@ -193,5 +206,6 @@ public class Model implements IModel {
     @Override
     public void setWeight(Double weight){
         this.weight=weight;
+        alertAll();
     }
 }
