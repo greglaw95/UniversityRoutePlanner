@@ -3,9 +3,6 @@ package com.solutions.law.universityrouteplanner.View;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.graphics.Color;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.MotionEvent;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -23,6 +20,12 @@ import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.solutions.law.universityrouteplanner.Controller.IController;
 import com.solutions.law.universityrouteplanner.Model.Update.RoutePlannerState;
+import com.solutions.law.universityrouteplanner.View.Adapters.DirectionsClickAdapter;
+import com.solutions.law.universityrouteplanner.View.Adapters.InOutClickAdapter;
+import com.solutions.law.universityrouteplanner.View.Adapters.MarkerClickAdapter;
+import com.solutions.law.universityrouteplanner.View.Adapters.PolygonClickAdapter;
+import com.solutions.law.universityrouteplanner.View.Adapters.TextWatcherAdapter;
+import com.solutions.law.universityrouteplanner.View.Adapters.TouchListenerAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,6 +46,8 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
     private RoutePlannerState prevState;
     private ErrorMessageDialogFragment errorReporter;
     private FragmentManager supportFragmentManager;
+    private CameraLimiter cameraLimiter;
+    private CameraPosition currentPosition;
 
     public View(IController control, List<EndPoint> endPoints, List<MidPoint> midPoints, AutoCompleteTextView startPoint, AutoCompleteTextView endPoint, Button directionsButton,Button inOutButton,FragmentManager fragmentManager,Activity context) {
         this.midPoints = midPoints;
@@ -60,66 +65,15 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
                 android.R.layout.simple_dropdown_item_1line, options);
         this.startPoint.setAdapter(adapter);
         this.endPoint.setAdapter(adapter);
-        this.startPoint.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                controller.setStart(s.toString());
-            }
-        });
-        this.startPoint.setOnTouchListener(new android.view.View.OnTouchListener() {
-            @Override
-            public boolean onTouch(android.view.View v, MotionEvent event) {
-                controller.focusOn(IController.Location.START);
-                return false;
-            }
-        });
-        this.endPoint.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                controller.setEnd(s.toString());
-            }
-        });
-        this.endPoint.setOnTouchListener(new android.view.View.OnTouchListener() {
-            @Override
-            public boolean onTouch(android.view.View v, MotionEvent event) {
-                controller.focusOn(IController.Location.END);
-                return false;
-            }
-        });
-        directionsButton.setOnClickListener(new android.view.View.OnClickListener() {
-            @Override
-            public void onClick(android.view.View v) {
-                controller.route();
-            }
-        });
-        inOutButton.setOnClickListener(new android.view.View.OnClickListener() {
-            @Override
-            public void onClick(android.view.View v) {
-                controller.goInside();
-            }
-        });
+        this.startPoint.addTextChangedListener(new TextWatcherAdapter(controller, IController.Location.START));
+        this.startPoint.setOnTouchListener(new TouchListenerAdapter(controller, IController.Location.START));
+        this.endPoint.addTextChangedListener(new TextWatcherAdapter(controller, IController.Location.END));
+        this.endPoint.setOnTouchListener(new TouchListenerAdapter(controller, IController.Location.END));
+        directionsButton.setOnClickListener(new DirectionsClickAdapter(controller));
+        inOutButton.setOnClickListener(new InOutClickAdapter(controller));
         prevState = null;
         setUpEndpointByPlane(endPoints);
+        cameraLimiter= new CameraLimiter(controller,this);
     }
 
 
@@ -154,40 +108,50 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
 
             @Override
             public void onIndoorLevelActivated(IndoorBuilding indoorBuilding) {
-                    controller.setLevel(Integer.toString(indoorBuilding.getLevels().size() - indoorBuilding.getActiveLevelIndex()));
+                controller.setLevel(Integer.toString(indoorBuilding.getLevels().size() - indoorBuilding.getActiveLevelIndex()));
             }
         });
-        gMap.setOnMarkerClickListener(controller);
-        gMap.setOnPolygonClickListener(controller);
-        gMap.setOnCameraChangeListener(controller);
+        gMap.setOnMarkerClickListener(new MarkerClickAdapter(controller));
+        gMap.setOnCameraChangeListener(cameraLimiter);
         controller.startUp();
+        currentPosition=gMap.getCameraPosition();
     }
 
     @Override
     public void update(RoutePlannerState state) {
+        boolean newStart;
+        boolean newEnd;
+        boolean newRoute;
+        boolean newPlane;
+        boolean newError;
         if (prevState!=null) {
-            Boolean startDifferent=(prevState.getStartLoc()==null||!prevState.getStartLoc().equals(state.getStartLoc()));
-            Boolean endDifferent=(prevState.getEndLoc()==null||!prevState.getEndLoc().equals(state.getEndLoc()));
-            Boolean newRoute=prevState.getRouteSelected()==null || !prevState.getRouteSelected().equals(state.getRouteSelected());
-            Boolean differentPlane=prevState.getPlane()==null || !prevState.getPlane().equals(state.getPlane());
-            Boolean newPosition=(prevState.getPosition()==null||!prevState.getPosition().equals(state.getPosition()));
-            Boolean newError=prevState.getError()==null||!prevState.getError().equals(state.getError());
-            if (startDifferent) {
+            newStart = (prevState.getStartLoc() == null || !prevState.getStartLoc().equals(state.getStartLoc()));
+            newEnd = (prevState.getEndLoc() == null || !prevState.getEndLoc().equals(state.getEndLoc()));
+            newRoute = prevState.getRouteSelected() == null || !prevState.getRouteSelected().equals(state.getRouteSelected());
+            newPlane = prevState.getPlane() == null || !prevState.getPlane().equals(state.getPlane());
+            newError = prevState.getError() == null || !prevState.getError().equals(state.getError());
+        }else {
+            newStart= state.getStartLoc()!=null;
+            newEnd=state.getEndLoc()!=null;
+            newRoute=state.getRouteSelected()!=null;
+            newPlane=state.getPlane()!=null;
+            newError=state.getError()!=null;
+        }
+            if (newStart) {
                 updateText(startPoint, state.getStartLoc());
             }
-            if (endDifferent) {
+            if (newEnd) {
                 updateText(endPoint, state.getEndLoc());
             }
-            if (startDifferent || endDifferent || newRoute || differentPlane) {
-                updateMapAdditions(state.getStartLoc(), state.getEndLoc(), state.getRouteSelected(),state.getPlane());
+            if (newStart || newEnd || newRoute || newPlane) {
+                updateMapAdditions(state.getStartLoc(), state.getEndLoc(), state.getRouteSelected(), state.getPlane());
             }
-            if((state.getPosition()!=null)&&(newPosition||differentPlane)){
-                updateMap(state.getPosition(),state.getPlane(),state.getLevel());
+            if(newPlane){
+                updateMap(state.getPlane(), state.getLevel());
             }
             if(newError){
                 updateError(state.getError());
             }
-        }
         prevState = state;
     }
 
@@ -197,20 +161,26 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
         }
     }
 
-    private void updateMap(CameraPosition position,String plane,String level){
+    private void updateMap(String plane,String level){
+        boolean levelSet;
+        gMap.setOnPolygonClickListener(new PolygonClickAdapter(endPointByPlane.get(plane),controller));
         if(plane.equals("Outside")){
             gMap.getUiSettings().setIndoorLevelPickerEnabled(false);
             gMap.setIndoorEnabled(false);
-        }else{
+        }else {
             gMap.getUiSettings().setIndoorLevelPickerEnabled(true);
             gMap.setIndoorEnabled(true);
-        }
-        gMap.animateCamera(CameraUpdateFactory.newCameraPosition(position));
-        if(gMap.getFocusedBuilding()!=null) {
-            try {
-                gMap.getFocusedBuilding().getLevels().get(gMap.getFocusedBuilding().getLevels().size() - Integer.parseInt(level)).activate();
-            } catch (Exception e) {
+            levelSet=false;
+            cameraLimiter.onCameraChange(currentPosition);
+            while(levelSet==false){
+                if(gMap.getFocusedBuilding()!=null) {
+                    try {
+                        levelSet=true;
+                        gMap.getFocusedBuilding().getLevels().get(gMap.getFocusedBuilding().getLevels().size() - Integer.parseInt(level)).activate();
+                    } catch (Exception e) {
 
+                    }
+                }
             }
         }
     }
@@ -261,6 +231,11 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
             errorReporter.setMessage(error);
             errorReporter.show(supportFragmentManager, "Error");
         }
+    }
+
+    public void setPosition(CameraPosition position){
+        currentPosition=position;
+        gMap.animateCamera(CameraUpdateFactory.newCameraPosition(position));
     }
 
 }

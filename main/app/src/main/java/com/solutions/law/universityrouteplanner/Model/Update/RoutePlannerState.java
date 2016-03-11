@@ -14,5 +14,4 @@ public interface RoutePlannerState {
     public String getError();
     public String getPlane();
     public String getLevel();
-    public CameraPosition getPosition();
 }

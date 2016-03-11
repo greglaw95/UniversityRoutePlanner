@@ -1,19 +1,13 @@
 package com.solutions.law.universityrouteplanner.StartUp;
 
 import android.support.v4.app.FragmentActivity;
-import android.app.FragmentManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 
 import com.google.android.gms.maps.SupportMapFragment;
 import com.solutions.law.universityrouteplanner.Controller.Controller;
-import com.solutions.law.universityrouteplanner.Controller.Selectable;
 import com.solutions.law.universityrouteplanner.Controller.Structure;
-import com.solutions.law.universityrouteplanner.Model.Graph.INode;
-import com.solutions.law.universityrouteplanner.Model.Graph.Node;
 import com.solutions.law.universityrouteplanner.Model.Model;
 import com.solutions.law.universityrouteplanner.Model.PathFinding.DijkstrasAlgorithm;
 import com.solutions.law.universityrouteplanner.R;
@@ -44,7 +38,7 @@ public class MainActivity extends FragmentActivity{
                 structures.add(new Building(current));
             }
         }
-        Controller controller = new Controller(model,new ArrayList<Selectable>(endPoints),structures);
+        Controller controller = new Controller(model,structures);
         AutoCompleteTextView textOne =(AutoCompleteTextView) findViewById(R.id.locationOne);
         AutoCompleteTextView textTwo =(AutoCompleteTextView) findViewById(R.id.locationTwo);
         Button directionsButton = (Button) findViewById(R.id.directionsButton);

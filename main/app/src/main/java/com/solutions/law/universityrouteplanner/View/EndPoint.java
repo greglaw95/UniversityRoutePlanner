@@ -1,6 +1,7 @@
 package com.solutions.law.universityrouteplanner.View;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polygon;
 
 import java.util.List;
 
@@ -12,4 +13,5 @@ public interface EndPoint {
     public List<LatLng> getCoOrds();
     public String getPlane();
     public LatLng getCentre();
+    public boolean sameShape(Polygon p);
 }

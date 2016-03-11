@@ -15,14 +15,12 @@ import java.util.List;
 public class Controller implements IController {
 
     private IModel model;
-    private List<Selectable> elements;
     private Location location;
     private List<Structure> structures;
     private Structure currentStructure;
 
-    public Controller(IModel model,List<Selectable> elements,List<Structure> structures){
+    public Controller(IModel model,List<Structure> structures){
         this.model=model;
-        this.elements=elements;
         location=Location.START;
         this.structures=structures;
         currentStructure=null;
@@ -45,7 +43,6 @@ public class Controller implements IController {
                 model.setPlane(currentStructure.getName(), currentStructure.getLevel());
             }
         }
-        onCameraChange(model.getPosition());
     }
 
     @Override
@@ -72,91 +69,27 @@ public class Controller implements IController {
     }
 
     @Override
-    public void onPolygonClick(Polygon clicked){
-        for(Selectable element:elements){
-            if(element.sameShape(clicked)){
-                if(location==Location.START) {
-                    model.startLoc(element.getName());
-                }else{
-                    model.endLoc(element.getName());
-                }
-                return;
-            }
+    public void areaSelected(String areaName){
+        if(location==Location.START) {
+            model.startLoc(areaName);
+        }else{
+            model.endLoc(areaName);
         }
     }
 
     @Override
-    public boolean onMarkerClick(Marker marker) {
-        String fullPlane = marker.getTitle();
-        int lastChar=findLastChar(fullPlane);
-        if(lastChar<fullPlane.length()-1) {
-            String structure = fullPlane.substring(0,lastChar+1);
-            String level = fullPlane.substring(lastChar + 1);
-            currentStructure=findStructure(structure);
-            currentStructure.setLevel(level);
-            model.setPlane(structure,level);
-        }else{
-            model.setPlane(fullPlane.substring(0, lastChar+1),"");
+    public void setStructure(String structureName) {
+        if(structureName==null){
             currentStructure=null;
+            model.setPlane("Outside","");
+            return;
         }
-        return true;
+        currentStructure=findStructure(structureName);
     }
-
-    private int findLastChar(String title){
-        char[] blah = title.toCharArray();
-        int lastCharAt=0;
-        for(int i=0;i<blah.length;i++){
-            if(!Character.isDigit(blah[i])){
-                lastCharAt=i;
-            }
-        }
-        return lastCharAt;
-    }
-
 
     @Override
     public void startUp(){
         model.start();
-    }
-
-    @Override
-    public void onCameraChange(CameraPosition position) {
-        if(currentStructure!=null){
-            CameraPosition newPosition;
-            float newZoom=position.zoom;
-            Double newLng=position.target.longitude;
-            Double newLat=position.target.latitude;
-            if(position.zoom<currentStructure.getMinZoomAllowed()){
-                newZoom=currentStructure.getMinZoomAllowed();
-            }
-            double halfRange=0.5*(360/(Math.pow(2,newZoom)));
-            if(position.target.longitude<currentStructure.getMinLngAllowed()+halfRange){
-                newLng=currentStructure.getMinLngAllowed()+halfRange;
-            }
-            if(position.target.longitude>currentStructure.getMaxLngAllowed()-halfRange){
-                if(newLng.equals(currentStructure.getMinLngAllowed())){
-                    newLng=position.target.longitude;
-                }else {
-                    newLng = currentStructure.getMaxLngAllowed()-halfRange;
-                }
-            }
-            if(position.target.latitude<currentStructure.getMinLatAllowed()+halfRange){
-                newLat=currentStructure.getMinLatAllowed()+halfRange;
-            }
-            if(position.target.latitude>currentStructure.getMaxLatAllowed()-halfRange){
-                if(newLat.equals(currentStructure.getMinLatAllowed())){
-                    newLat=position.target.latitude;
-                }else {
-                    newLat=currentStructure.getMaxLatAllowed()-halfRange;
-                }
-            }
-            newPosition = new CameraPosition(new LatLng(newLat,newLng),newZoom,position.tilt,position.bearing);
-            if(!newPosition.equals(position)) {
-                model.setPosition(newPosition);
-                return;
-            }
-        }
-        model.setPosition(position);
     }
 
     private Structure findStructure(String name){
@@ -172,6 +105,11 @@ public class Controller implements IController {
         if(!start.equals(model.getStart())){
             model.startLoc(start);
         }
+    }
+
+    @Override
+    public Structure getStructure(){
+        return currentStructure;
     }
 
     public void setEnd(String end){

@@ -1,11 +1,14 @@
 package com.solutions.law.universityrouteplanner.Controller;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.Polygon;
 
 /**
  * Created by kbb12 on 10/02/2016.
  */
-public interface IController extends GoogleMap.OnPolygonClickListener,GoogleMap.OnCameraChangeListener,GoogleMap.OnMarkerClickListener {
+public interface IController {
     public enum Location{
         START,END
     }
@@ -25,4 +28,10 @@ public interface IController extends GoogleMap.OnPolygonClickListener,GoogleMap.
     public void setStart(String newStart);
 
     public void setEnd(String newEnd);
+
+    public void areaSelected(String areaName);
+
+    public void setStructure(String structure);
+
+    public Structure getStructure();
 }

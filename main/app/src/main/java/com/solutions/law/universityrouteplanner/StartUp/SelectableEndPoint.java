@@ -2,7 +2,6 @@ package com.solutions.law.universityrouteplanner.StartUp;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polygon;
-import com.solutions.law.universityrouteplanner.Controller.Selectable;
 import com.solutions.law.universityrouteplanner.View.EndPoint;
 
 import java.util.List;
@@ -10,7 +9,7 @@ import java.util.List;
 /**
  * Created by kbb12 on 10/02/2016.
  */
-public class SelectableEndPoint implements Selectable,EndPoint {
+public class SelectableEndPoint implements EndPoint {
     private String name;
     private List<LatLng> coOrds;
     private String plane;
@@ -45,6 +44,7 @@ public class SelectableEndPoint implements Selectable,EndPoint {
     public List<LatLng> getCoOrds(){
         return coOrds;
     }
+
     public boolean sameShape(Polygon p){
         for(LatLng latLng:coOrds){
             if(!p.getPoints().contains(latLng)){

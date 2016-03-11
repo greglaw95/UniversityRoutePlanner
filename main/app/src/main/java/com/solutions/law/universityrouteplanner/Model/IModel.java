@@ -7,6 +7,7 @@ import com.solutions.law.universityrouteplanner.View.RoutePlannerListener;
  * Created by kbb12155 on 10/02/16.
  */
 public interface IModel {
+
     public void start();
     public void addListener(RoutePlannerListener listener);
     public void startLoc(String item);
@@ -16,6 +17,4 @@ public interface IModel {
     public void setPlane(String plane,String level);
     public String getStart();
     public String getEnd();
-    public void setPosition(CameraPosition position);
-    public CameraPosition getPosition();
 }
