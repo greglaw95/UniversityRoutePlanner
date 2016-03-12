@@ -22,6 +22,7 @@ import com.solutions.law.universityrouteplanner.Controller.IController;
 import com.solutions.law.universityrouteplanner.Model.Update.RoutePlannerState;
 import com.solutions.law.universityrouteplanner.View.Adapters.DirectionsClickAdapter;
 import com.solutions.law.universityrouteplanner.View.Adapters.InOutClickAdapter;
+import com.solutions.law.universityrouteplanner.View.Adapters.IndoorStateChangeAdapter;
 import com.solutions.law.universityrouteplanner.View.Adapters.MarkerClickAdapter;
 import com.solutions.law.universityrouteplanner.View.Adapters.PolygonClickAdapter;
 import com.solutions.law.universityrouteplanner.View.Adapters.TextWatcherAdapter;
@@ -48,6 +49,7 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
     private FragmentManager supportFragmentManager;
     private CameraLimiter cameraLimiter;
     private CameraPosition currentPosition;
+    private IndoorStateChangeAdapter indoorStateChangeAdapter;
 
     public View(IController control, List<EndPoint> endPoints, List<MidPoint> midPoints, AutoCompleteTextView startPoint, AutoCompleteTextView endPoint, Button directionsButton,Button inOutButton,FragmentManager fragmentManager,Activity context) {
         this.midPoints = midPoints;
@@ -74,6 +76,7 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
         prevState = null;
         setUpEndpointByPlane(endPoints);
         cameraLimiter= new CameraLimiter(controller,this);
+        indoorStateChangeAdapter= new IndoorStateChangeAdapter(controller,this);
     }
 
 
@@ -95,22 +98,7 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
         gMap.setIndoorEnabled(false);
         LatLng centre = new LatLng(55.861903,-4.244082);
         gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(centre, 16));
-        gMap.setOnIndoorStateChangeListener(new GoogleMap.OnIndoorStateChangeListener() {
-            @Override
-            public void onIndoorBuildingFocused() {
-                try {
-                    gMap.getFocusedBuilding().getLevels().get(gMap.getFocusedBuilding().getLevels().size() - Integer.parseInt(prevState.getLevel())).activate();
-                } catch (Exception e) {
-                    //Wrong building focused but this doesn't matter it will be the right one next time around. It's just google maps panning over other buildings as it moves
-                    //to the selected building.
-                }
-            }
-
-            @Override
-            public void onIndoorLevelActivated(IndoorBuilding indoorBuilding) {
-                controller.setLevel(Integer.toString(indoorBuilding.getLevels().size() - indoorBuilding.getActiveLevelIndex()));
-            }
-        });
+        gMap.setOnIndoorStateChangeListener(indoorStateChangeAdapter);
         gMap.setOnMarkerClickListener(new MarkerClickAdapter(controller));
         gMap.setOnCameraChangeListener(cameraLimiter);
         controller.startUp();
@@ -169,6 +157,7 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
             gMap.setIndoorEnabled(false);
         }else {
             gMap.getUiSettings().setIndoorLevelPickerEnabled(true);
+            indoorStateChangeAdapter.deactivate();
             gMap.setIndoorEnabled(true);
             levelSet=false;
             cameraLimiter.onCameraChange(currentPosition);
@@ -182,6 +171,7 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
                     }
                 }
             }
+            indoorStateChangeAdapter.activate();
         }
     }
 
@@ -236,6 +226,14 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
     public void setPosition(CameraPosition position){
         currentPosition=position;
         gMap.animateCamera(CameraUpdateFactory.newCameraPosition(position));
+    }
+
+    public IndoorBuilding getFocusedBuilding(){
+        return gMap.getFocusedBuilding();
+    }
+
+    public String getLevel(){
+        return prevState.getLevel();
     }
 
 }
