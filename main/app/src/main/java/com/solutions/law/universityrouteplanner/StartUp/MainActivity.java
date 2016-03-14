@@ -4,12 +4,14 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.Switch;
 
 import com.google.android.gms.maps.SupportMapFragment;
 import com.solutions.law.universityrouteplanner.Controller.Controller;
 import com.solutions.law.universityrouteplanner.Controller.Structure;
-import com.solutions.law.universityrouteplanner.Model.Model;
-import com.solutions.law.universityrouteplanner.Model.PathFinding.DijkstrasAlgorithm;
+import com.solutions.law.universityrouteplanner.Controller.BasicCheck;
+import com.solutions.law.universityrouteplanner.Model.DijkstrasModel;
 import com.solutions.law.universityrouteplanner.R;
 import com.solutions.law.universityrouteplanner.View.EndPoint;
 import com.solutions.law.universityrouteplanner.View.MidPoint;
@@ -31,7 +33,7 @@ public class MainActivity extends FragmentActivity{
         setContentView(R.layout.activity_outdoor);
         load();
         GraphBuilder gb = new GraphBuilder(endPoints,steppingStones,links);
-        Model model = new Model(gb.getGraph(),new DijkstrasAlgorithm());
+        DijkstrasModel model = new DijkstrasModel(gb.getGraph());
         List<Structure> structures=new ArrayList<>();
         for(SelectableEndPoint current:endPoints){
             if(current.getPlane().equals("Outside")){
@@ -41,9 +43,11 @@ public class MainActivity extends FragmentActivity{
         Controller controller = new Controller(model,structures);
         AutoCompleteTextView textOne =(AutoCompleteTextView) findViewById(R.id.locationOne);
         AutoCompleteTextView textTwo =(AutoCompleteTextView) findViewById(R.id.locationTwo);
+        Switch stairs = (Switch) findViewById(R.id.stairs);
+        Switch lifts =(Switch) findViewById(R.id.lifts);
         Button directionsButton = (Button) findViewById(R.id.directionsButton);
         Button inOutButton = (Button) findViewById(R.id.inOutButton);
-        View view = new View(controller,new ArrayList<EndPoint>(endPoints),new ArrayList<MidPoint>(steppingStones),textOne,textTwo,directionsButton,inOutButton,getFragmentManager(),this);
+        View view = new View(controller,new ArrayList<EndPoint>(endPoints),new ArrayList<MidPoint>(steppingStones),textOne,textTwo,directionsButton,inOutButton,getFragmentManager(),this,stairs,lifts);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);

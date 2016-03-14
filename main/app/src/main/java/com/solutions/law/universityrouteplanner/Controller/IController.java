@@ -34,4 +34,8 @@ public interface IController {
     public void setStructure(String structure);
 
     public Structure getStructure();
+
+    public void useStairs(boolean stairUse);
+
+    public void useLifts(boolean liftUse);
 }

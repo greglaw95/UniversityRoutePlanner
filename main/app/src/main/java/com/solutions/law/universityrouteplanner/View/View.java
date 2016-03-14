@@ -7,6 +7,8 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.Switch;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -23,8 +25,10 @@ import com.solutions.law.universityrouteplanner.Model.Update.RoutePlannerState;
 import com.solutions.law.universityrouteplanner.View.Adapters.DirectionsClickAdapter;
 import com.solutions.law.universityrouteplanner.View.Adapters.InOutClickAdapter;
 import com.solutions.law.universityrouteplanner.View.Adapters.IndoorStateChangeAdapter;
+import com.solutions.law.universityrouteplanner.View.Adapters.LiftClickAdapter;
 import com.solutions.law.universityrouteplanner.View.Adapters.MarkerClickAdapter;
 import com.solutions.law.universityrouteplanner.View.Adapters.PolygonClickAdapter;
+import com.solutions.law.universityrouteplanner.View.Adapters.StairClickAdapter;
 import com.solutions.law.universityrouteplanner.View.Adapters.TextWatcherAdapter;
 import com.solutions.law.universityrouteplanner.View.Adapters.TouchListenerAdapter;
 
@@ -51,7 +55,7 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
     private CameraPosition currentPosition;
     private IndoorStateChangeAdapter indoorStateChangeAdapter;
 
-    public View(IController control, List<EndPoint> endPoints, List<MidPoint> midPoints, AutoCompleteTextView startPoint, AutoCompleteTextView endPoint, Button directionsButton,Button inOutButton,FragmentManager fragmentManager,Activity context) {
+    public View(IController control, List<EndPoint> endPoints, List<MidPoint> midPoints, AutoCompleteTextView startPoint, AutoCompleteTextView endPoint, Button directionsButton,Button inOutButton,FragmentManager fragmentManager,Activity context,Switch stairs,Switch lifts) {
         this.midPoints = midPoints;
         this.controller = control;
         this.startPoint = startPoint;
@@ -77,6 +81,8 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
         setUpEndpointByPlane(endPoints);
         cameraLimiter= new CameraLimiter(controller,this);
         indoorStateChangeAdapter= new IndoorStateChangeAdapter(controller,this);
+        stairs.setOnClickListener(new StairClickAdapter(controller));
+        lifts.setOnClickListener(new LiftClickAdapter(controller));
     }
 
 
@@ -99,7 +105,7 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
         LatLng centre = new LatLng(55.861903,-4.244082);
         gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(centre, 16));
         gMap.setOnIndoorStateChangeListener(indoorStateChangeAdapter);
-        gMap.setOnMarkerClickListener(new MarkerClickAdapter(controller));
+        gMap.setOnMarkerClickListener(new MarkerClickAdapter(this));
         gMap.setOnCameraChangeListener(cameraLimiter);
         controller.startUp();
         currentPosition=gMap.getCameraPosition();
@@ -112,17 +118,24 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
         boolean newRoute;
         boolean newPlane;
         boolean newError;
+        String plane=state.getPlane();
+        if(state.getFocusOn()!=null){
+            plane = findPlane(state.getFocusOn());
+            if(plane!=null){
+                setPlane(plane);
+            }
+        }
         if (prevState!=null) {
             newStart = (prevState.getStartLoc() == null || !prevState.getStartLoc().equals(state.getStartLoc()));
             newEnd = (prevState.getEndLoc() == null || !prevState.getEndLoc().equals(state.getEndLoc()));
             newRoute = prevState.getRouteSelected() == null || !prevState.getRouteSelected().equals(state.getRouteSelected());
-            newPlane = prevState.getPlane() == null || !prevState.getPlane().equals(state.getPlane());
+            newPlane = prevState.getPlane() == null || !prevState.getPlane().equals(plane);
             newError = prevState.getError() == null || !prevState.getError().equals(state.getError());
         }else {
             newStart= state.getStartLoc()!=null;
             newEnd=state.getEndLoc()!=null;
             newRoute=state.getRouteSelected()!=null;
-            newPlane=state.getPlane()!=null;
+            newPlane=plane!=null;
             newError=state.getError()!=null;
         }
             if (newStart) {
@@ -132,10 +145,10 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
                 updateText(endPoint, state.getEndLoc());
             }
             if (newStart || newEnd || newRoute || newPlane) {
-                updateMapAdditions(state.getStartLoc(), state.getEndLoc(), state.getRouteSelected(), state.getPlane());
+                updateMapAdditions(state.getStartLoc(), state.getEndLoc(), state.getRouteSelected(), plane);
             }
             if(newPlane){
-                updateMap(state.getPlane(), state.getLevel());
+                updateMap(plane, state.getLevel());
             }
             if(newError){
                 updateError(state.getError());
@@ -234,6 +247,40 @@ public class View implements OnMapReadyCallback, RoutePlannerListener {
 
     public String getLevel(){
         return prevState.getLevel();
+    }
+
+    private String findPlane(String area){
+        for(String key:endPointByPlane.keySet()){
+            for(EndPoint current:endPointByPlane.get(key)){
+                if(current.getName().equals(area)){
+                    return key;
+                }
+            }
+        }
+        return null;
+    }
+
+    public void setPlane(String plane){
+        int lastChar=findLastChar(plane);
+        if(lastChar<plane.length()-1) {
+            String structure = plane.substring(0,lastChar+1);
+            String level = plane.substring(lastChar + 1);
+            controller.setStructure(structure);
+            controller.setLevel(level);
+        }else{
+            controller.setStructure(null);
+        }
+    }
+
+    private int findLastChar(String title){
+        char[] blah = title.toCharArray();
+        int lastCharAt=0;
+        for(int i=0;i<blah.length;i++){
+            if(!Character.isDigit(blah[i])){
+                lastCharAt=i;
+            }
+        }
+        return lastCharAt;
     }
 
 }

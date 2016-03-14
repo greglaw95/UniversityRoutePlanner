@@ -1,10 +1,10 @@
-package com.solutions.law.universityrouteplanner.Model.PathFinding;
+package com.solutions.law.universityrouteplanner.Model;
 
+import com.solutions.law.universityrouteplanner.Controller.NodeCheck;
 import com.solutions.law.universityrouteplanner.Model.Graph.IEdge;
 import com.solutions.law.universityrouteplanner.Model.Graph.INode;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -14,29 +14,25 @@ import java.util.Set;
 /**
  * Created by kbb12 on 16/02/2016.
  */
-public class DijkstrasAlgorithm implements PathFindingAlgorithm {
-    private List<INode> graph;
-
-
-    public void setUp(List<INode> graph){
-        this.graph=graph;
+public class DijkstrasModel extends Model {
+    
+    public DijkstrasModel(List<INode> graph){
+        super(graph);
     }
-
-    public List<String> findRoute(INode start,INode end){
+    
+    
+    public Map<INode,INode> findRoute(){
         Set<INode> notDealtWith = new HashSet<>();
         Map<INode,Double> currentDistanceTo = new HashMap<>();
         Map<INode,INode> predecessor = new HashMap<>();
         INode toExamine;
         INode other;
         Double possibleNewDistance;
-        if(start.equals(end)){
-            throw new RuntimeException();//TODO
-        }
-        routeSetUp(notDealtWith, currentDistanceTo, start);
-        toExamine=start;
-        while(toExamine!=end){
+        routeSetUp(notDealtWith, currentDistanceTo, startLoc);
+        toExamine=startLoc;
+        while(toExamine!=endLoc){
             notDealtWith.remove(toExamine);
-            if(toExamine.canPassThrough()||toExamine.equals(start)) {
+            if(check.canUse(toExamine)||toExamine.equals(startLoc)) {
                 for (IEdge edge : toExamine.getIEdges()) {
                     other = edge.getOtherINode();
                     possibleNewDistance = currentDistanceTo.get(toExamine) + edge.getWeight();
@@ -48,15 +44,15 @@ public class DijkstrasAlgorithm implements PathFindingAlgorithm {
             }
             toExamine=closestUnexaminedINode(currentDistanceTo, notDealtWith);
         }
-        return parseRoute(predecessor,start,end);
+        return predecessor;
     }
 
-    private void routeSetUp(Set<INode> notDealtWith,Map<INode,Double> currentDistanceTo,INode start){
+    private void routeSetUp(Set<INode> notDealtWith,Map<INode,Double> currentDistanceTo,INode startLoc){
         notDealtWith.addAll(graph);
         for(INode current:graph){
             currentDistanceTo.put(current,Double.MAX_VALUE);
         }
-        currentDistanceTo.put(start,0.0);
+        currentDistanceTo.put(startLoc,0.0);
     }
 
 
@@ -70,18 +66,5 @@ public class DijkstrasAlgorithm implements PathFindingAlgorithm {
         }
         return lowest;
     }
-
-    private List<String> parseRoute(Map<INode,INode> predecessor,INode start,INode end){
-        List<String> route = new ArrayList<>();
-        INode nextINode;
-        route.add(end.getName());
-        nextINode=predecessor.get(end);
-        while(nextINode!=start){
-            route.add(nextINode.getName());
-            nextINode=predecessor.get(nextINode);
-        }
-        route.add(nextINode.getName());
-        Collections.reverse(route);
-        return route;
-    }
+    
 }

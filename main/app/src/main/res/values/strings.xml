@@ -6,4 +6,6 @@
     <string name="directionsButton">Route</string>
     <string name="inOutButton">In/Out</string>
     <string name="accept">OK</string>
+    <string name="StairText">Avoid Stairs</string>
+    <string name="LiftText">Avoid Lifts</string>
 </resources>

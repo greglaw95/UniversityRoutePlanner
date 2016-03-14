@@ -1,7 +1,5 @@
 package com.solutions.law.universityrouteplanner.Model.Update;
 
-import com.google.android.gms.maps.model.CameraPosition;
-
 import java.util.List;
 
 /**
@@ -14,14 +12,16 @@ public class ModelState implements RoutePlannerState {
     private String error;
     private String plane;
     private String level;
+    private String focusOn;
 
-    public ModelState(String startLoc,String endLoc,List<String> routeSelected,String error,String plane,String level){
+    public ModelState(String startLoc,String endLoc,List<String> routeSelected,String error,String plane,String level,String focusOn){
         this.startLoc=startLoc;
         this.endLoc=endLoc;
         this.routeSelected=routeSelected;
         this.error=error;
         this.plane=plane;
         this.level=level;
+        this.focusOn=focusOn;
     }
 
     @Override
@@ -47,5 +47,9 @@ public class ModelState implements RoutePlannerState {
 
     public String getLevel(){
         return level;
+    }
+
+    public String getFocusOn(){
+        return focusOn;
     }
 }

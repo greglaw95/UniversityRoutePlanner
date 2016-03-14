@@ -1,6 +1,6 @@
 package com.solutions.law.universityrouteplanner.Model;
 
-import com.google.android.gms.maps.model.CameraPosition;
+import com.solutions.law.universityrouteplanner.Controller.NodeCheck;
 import com.solutions.law.universityrouteplanner.View.RoutePlannerListener;
 
 /**
@@ -8,7 +8,7 @@ import com.solutions.law.universityrouteplanner.View.RoutePlannerListener;
  */
 public interface IModel {
 
-    public void start();
+    public void start(NodeCheck check);
     public void addListener(RoutePlannerListener listener);
     public void startLoc(String item);
     public void endLoc(String item);
@@ -17,4 +17,5 @@ public interface IModel {
     public void setPlane(String plane,String level);
     public String getStart();
     public String getEnd();
+    public void setCheck(NodeCheck check);
 }
