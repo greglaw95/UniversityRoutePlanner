@@ -1,10 +1,6 @@
 package com.solutions.law.universityrouteplanner.StartUp;
 
-import android.util.Log;
-
-import com.solutions.law.universityrouteplanner.Model.Graph.Edge;
 import com.solutions.law.universityrouteplanner.Model.Graph.INode;
-import com.solutions.law.universityrouteplanner.Model.Graph.Node;
 import com.solutions.law.universityrouteplanner.View.EndPoint;
 
 import java.util.ArrayList;

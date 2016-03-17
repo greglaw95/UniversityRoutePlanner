@@ -1,4 +1,7 @@
-package com.solutions.law.universityrouteplanner.Model.Graph;
+package com.solutions.law.universityrouteplanner.StartUp;
+
+import com.solutions.law.universityrouteplanner.Model.Graph.IEdge;
+import com.solutions.law.universityrouteplanner.Model.Graph.INode;
 
 /**
  * Created by kbb12 on 15/02/2016.
