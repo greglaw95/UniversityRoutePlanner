@@ -54,6 +54,8 @@ public class CameraLimiter implements GoogleMap.OnCameraChangeListener {
             }
             newPosition = new CameraPosition(new LatLng(newLat,newLng),newZoom,position.tilt,position.bearing);
         }
-        view.setPosition(newPosition);
+        if(newPosition!=null) {
+            view.setPosition(newPosition);
+        }
     }
 }
