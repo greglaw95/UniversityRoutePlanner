@@ -25,7 +25,7 @@ public class MainActivity extends FragmentActivity {
     private List<Link> links;
     private List<SteppingStone> steppingStones;
     private List<SelectableEndPoint> endPoints;
-    private Boolean testing=true;
+    private Boolean testing=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

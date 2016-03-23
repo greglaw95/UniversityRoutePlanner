@@ -13,6 +13,7 @@ public class StairCheck implements NodeCheck {
 
     @Override
     public boolean canUse(INode node) {
-        return (!node.getName().contains("STAIR"));
+        String name = node.getName().toUpperCase();
+        return (!name.contains("STAIR"));
     }
 }

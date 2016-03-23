@@ -14,6 +14,7 @@ public class LiftCheck implements NodeCheck {
 
     @Override
     public boolean canUse(INode node) {
-        return (!node.getName().contains("LIFT"));
+        String name = node.getName().toUpperCase();
+        return (!name.contains("LIFT"));
     }
 }
