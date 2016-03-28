@@ -1,7 +1,5 @@
 package com.solutions.law.universityrouteplanner.View.Adapters;
 
-import android.graphics.drawable.Icon;
-
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.IndoorBuilding;
 import com.solutions.law.universityrouteplanner.Controller.IController;
