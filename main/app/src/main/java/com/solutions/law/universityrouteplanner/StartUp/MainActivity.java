@@ -36,7 +36,7 @@ public class MainActivity extends FragmentActivity {
                 new DrawingPerformanceCheck(this,(int) Math.pow(10,i));
                 Log.d("Testing",""+i);
             }
-            //new RoutingPerformanceCheck(this);
+            new RoutingPerformanceCheck(this);
         } else {
             load();
             GraphBuilder gb = new GraphBuilder(endPoints, steppingStones, links);
