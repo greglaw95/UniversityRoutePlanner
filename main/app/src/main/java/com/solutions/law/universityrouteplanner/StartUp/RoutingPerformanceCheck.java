@@ -33,6 +33,7 @@ public class RoutingPerformanceCheck {
         testOne(check);
         testTwo(check);
         testThree(check);
+        testFour(check);
         Log.d("Testing", "Basic Check+No Stairs");
         CompositeCheck compCheck=new CompositeCheck();
         compCheck.addCheck(new BasicCheck());
@@ -40,6 +41,7 @@ public class RoutingPerformanceCheck {
         testOne(compCheck);
         testTwo(compCheck);
         testThree(compCheck);
+        testFour(compCheck);
         Log.d("Testing", "Basic Check+No Lifts");
         compCheck=new CompositeCheck();
         compCheck.addCheck(new BasicCheck());
@@ -47,6 +49,7 @@ public class RoutingPerformanceCheck {
         testOne(compCheck);
         testTwo(compCheck);
         testThree(compCheck);
+        testFour(compCheck);
         Log.d("Testing", "Basic Check+No Lifts+No Stairs");
         compCheck=new CompositeCheck();
         compCheck.addCheck(new BasicCheck());
@@ -55,10 +58,10 @@ public class RoutingPerformanceCheck {
         testOne(compCheck);
         testTwo(compCheck);
         testThree(compCheck);
+        testFour(compCheck);
     }
 
     public void testOne(NodeCheck check){
-        Log.e("Testing", "Test Two starting");
         gb=new GraphBuilder(endPoints,steppingStones,links);
         model=new DijkstrasModel(gb.getGraph());
         model.setCheck(check);
@@ -73,14 +76,14 @@ public class RoutingPerformanceCheck {
         List<SteppingStone> shorterSteppingStones=new ArrayList<>();
         List<Link> shorterLinks = new ArrayList<>(links);
         for(SelectableEndPoint endPoint:endPoints){
-            if(endPoint.getPlane().contains("Livingstone")){
+            if(endPoint.getPlane().contains("Livingstone Tower11")){
                 removedEndPoints.add(endPoint);
             }else{
                 shorterEndPoints.add(endPoint);
             }
         }
         for(SteppingStone steppingStone:steppingStones){
-            if(steppingStone.getPlane().contains("Livingstone")){
+            if(steppingStone.getPlane().contains("Livingstone Tower11")){
                 removedSteppingStones.add(steppingStone);
             }else{
                 shorterSteppingStones.add(steppingStone);
@@ -90,7 +93,7 @@ public class RoutingPerformanceCheck {
         gb=new GraphBuilder(shorterEndPoints,shorterSteppingStones,shorterLinks);
         model=new DijkstrasModel(gb.getGraph());
         model.setCheck(check);
-        Log.d("Testing", "Without LT results: No. of EndPoints: " + shorterEndPoints.size() + " No. of Midpoints: " + shorterSteppingStones.size() + " No. of Links: " + shorterLinks.size());
+        Log.d("Testing", "Without LT11 results: No. of EndPoints: " + shorterEndPoints.size() + " No. of Midpoints: " + shorterSteppingStones.size() + " No. of Links: " + shorterLinks.size());
         Log.d("Testing","Average Time To Find Route: " + mainTestBody(shorterEndPoints, shorterSteppingStones));
     }
 
@@ -122,6 +125,34 @@ public class RoutingPerformanceCheck {
         Log.d("Testing","Average Time To Find Route: " + mainTestBody(shorterEndPoints, shorterSteppingStones));
     }
 
+    public void testFour(NodeCheck check){
+        List<SelectableEndPoint> removedEndPoints = new ArrayList<>();
+        List<SelectableEndPoint> shorterEndPoints= new ArrayList<>();
+        List<SteppingStone> removedSteppingStones= new ArrayList<>();
+        List<SteppingStone> shorterSteppingStones=new ArrayList<>();
+        List<Link> shorterLinks = new ArrayList<>(links);
+        for(SelectableEndPoint endPoint:endPoints){
+            if(endPoint.getPlane().equals("Royal College4")||endPoint.getPlane().equals("Livingstone Tower11")){
+                removedEndPoints.add(endPoint);
+            }else{
+                shorterEndPoints.add(endPoint);
+            }
+        }
+        for(SteppingStone steppingStone:steppingStones){
+            if(steppingStone.getPlane().equals("Royal College4")||steppingStone.getPlane().equals("Livingstone Tower11")){
+                removedSteppingStones.add(steppingStone);
+            }else{
+                shorterSteppingStones.add(steppingStone);
+            }
+        }
+        tidyLinks(removedEndPoints,removedSteppingStones,shorterLinks);
+        gb=new GraphBuilder(shorterEndPoints,shorterSteppingStones,shorterLinks);
+        model=new DijkstrasModel(gb.getGraph());
+        model.setCheck(check);
+        Log.d("Testing", "Without RC2 or LT11 results: No. of EndPoints: " + shorterEndPoints.size() + " No. of Midpoints: " + shorterSteppingStones.size() + " No. of Links: " + shorterLinks.size());
+        Log.d("Testing","Average Time To Find Route: " + mainTestBody(shorterEndPoints, shorterSteppingStones));
+    }
+
     public long mainTestBody(List<SelectableEndPoint> currentEndPoints,List<SteppingStone> currentSteppingStones){
         long totalTime=0;
         long startTime;
@@ -129,48 +160,15 @@ public class RoutingPerformanceCheck {
         int checks=0;
         for(SelectableEndPoint endPoint:currentEndPoints){
             model.startLoc(endPoint.getName());
-            for(SelectableEndPoint endPoint1:currentEndPoints){
-                if(!endPoint.equals(endPoint1)){
-                    model.endLoc(endPoint1.getName());
+            for(SelectableEndPoint otherEndPoint:currentEndPoints){
+                if(!endPoint.equals(otherEndPoint)){
+                    model.endLoc(otherEndPoint.getName());
                     startTime=System.currentTimeMillis();
                     model.findRoute();
                     routeTime=(System.currentTimeMillis()-startTime);
                     totalTime=totalTime+routeTime;
                     checks++;
-                    //Log.v("Testing","Current Route Time: "+routeTime+" Check Number: "+checks);
                 }
-            }
-            for(SteppingStone steppingStone:currentSteppingStones){
-                model.endLoc(steppingStone.getName());
-                startTime=System.currentTimeMillis();
-                model.findRoute();
-                routeTime=(System.currentTimeMillis()-startTime);
-                totalTime=totalTime+routeTime;
-                checks++;
-                //Log.v("Testing","Current Route Time: "+routeTime+" Check Number: "+checks);
-            }
-        }
-        for(SteppingStone steppingStone:currentSteppingStones){
-            model.startLoc(steppingStone.getName());
-            for(SteppingStone steppingStone1:currentSteppingStones){
-                if(!steppingStone.equals(steppingStone1)){
-                    model.endLoc(steppingStone1.getName());
-                    startTime=System.currentTimeMillis();
-                    model.findRoute();
-                    routeTime=(System.currentTimeMillis()-startTime);
-                    totalTime=totalTime+routeTime;
-                    checks++;
-                    //Log.v("Testing","Current Route Time: "+routeTime+" Check Number: "+checks);
-                }
-            }
-            for(SelectableEndPoint endPoint:currentEndPoints){
-                model.endLoc(endPoint.getName());
-                startTime=System.currentTimeMillis();
-                model.findRoute();
-                routeTime=(System.currentTimeMillis()-startTime);
-                totalTime=totalTime+routeTime;
-                checks++;
-                //Log.v("Testing","Current Route Time: "+routeTime+" Check Number: "+checks);
             }
         }
         return totalTime/checks;

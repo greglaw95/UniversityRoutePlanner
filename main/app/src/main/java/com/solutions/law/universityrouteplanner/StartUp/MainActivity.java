@@ -32,10 +32,7 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_outdoor);
         if (testing) {
-            for(int i=1;i<6;i++) {
-                new DrawingPerformanceCheck(this,(int) Math.pow(10,i));
-                Log.d("Testing",""+i);
-            }
+            new DrawingPerformanceCheck(this,1000);
             new RoutingPerformanceCheck(this);
         } else {
             load();
