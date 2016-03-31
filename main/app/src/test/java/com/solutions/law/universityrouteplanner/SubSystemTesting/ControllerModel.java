@@ -332,10 +332,4 @@ public class ControllerModel {
         }
     }
 
-    /*
-
-    public void useStairs(boolean stairUse);
-
-    public void useLifts(boolean liftUse);
-*/
 }
